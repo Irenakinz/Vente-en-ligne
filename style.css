@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/ccs2?family=Poppins&display=swap');
+        
+*{
+    padding: 0;
+    margin: 0;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    display: flex;
+}
+ul li{
+    position: relative;
+}
+ul li a {
+    display: block;
+    padding: 15px 30px;
+    margin-top: 10px;
+    color: #001602;
+    text-decoration: none;
+    font-size: 15px;
+   
+}
+ul li ul.dropdown li a {
+    display: block;
+    color: #001602;
+    padding: 0px;
+}
+ul li ul.dropdown {
+    width: 100px;
+    background: #72a35e;
+    position:absolute;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 2px 4px #368642;
+    border-radius: 6px;
+}
+ul li a:hover {
+    color:rgb(0, 179, 30);
+}
+ul li:hover ul.dropdown {
+    display: block; 
+    padding: 15px;
+}
+body{
+    background-color: #A9BB99;
+    margin: 0; 
+    width: 100%;
+    height: auto;  
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;     
+}
+h3{
+    color: aliceblue;
+    margin-left: 30%;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.Image22{
+    width: auto;
+    justify-content: center;
+}
+footer{
+    background-color:#fffc
+    color= rgb(255, 255, 255);
+}
+.footer-section{
+    flex: 1;
+    margin: 20px;
+}
+.footer-section h2 {
+    border-bottom: 1px solid rgb(86, 67, 255);
+    padding-bottom: 10px;
+    color: rgb(0, 64, 83);
+    padding: 50px;
+}
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+.footer-section ul li {
+    margin: 5px 0;
+}
+.footer-section ul li a{
+    color: rgb(0, 64, 83);
+    text-decoration: none;
+}
+.footer-section ul li a :hover {
+    text-decoration:underline;
+}
+.bas{
+    width: 1140px;
+    margin: auto;
+    justify-content: center;
+    flex: 1;
+}
+.column{
+    float: left;
+    width: 15%;
+    padding: 25px;
+    margin-left: 5px;
+    margin-bottom: 50px;
+}
+.row{
+    content:"";
+    display: flex;
+    clear: both;
+}
+.media{
+    background: rgb(19, 22, 39);
+}
+.media1{
+    margin-left: 75%;
+    position: absolute;
+    margin-top: 50px;
+}
+.media2{
+    margin-left: 80%;
+    position: absolute;
+    margin-top: 53px;
+}
+.media3{
+    margin-left: 85%;
+    position: absolute;
+    margin-top: 53px;
+}
+.media4{
+    margin-left: 90%;
+    position: absolute;
+    margin-top: 50px;
+}
+.media5{
+    margin-left: 95%;
+    position: absolute;
+    margin-top: 53px;
+}
+.media a :hover{
+    background:rgb(85, 89, 110);
+}
+hr{
+    color: #8384df;
+    width: auto;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.lien h5{
+    margin-left: 50px;
+    margin-bottom: 15px;
+}
+.logo1{
+    margin-left: 42%;
+    color: #001602;
+}
+.logo2{
+    color: #368642;
+    font-size: 100%;   
+}
+
+h6{
+    color: rgb(0, 64, 83);
+    column-count: 1;
+    column-gap: 20px;
+    white-space: nowrap;
+    margin-left: 20px;
+}
+p{
+    font-size: 12px;
+    color: #fff;
+    margin-left: 40px;
+}
+.Image7{
+    width: 14%;
+    margin-top: 204px;
+    position: absolute;
+    margin-left: 45px;
+}
+audio{
+    width: 100%;
+    margin-top: 10px;
+}
+.pictu {
+    display: inline-block;
+    position: relative;
+}
+.pictu::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 165, 0, 0);
+    transition: background-color 0.3s ease;
+}
+.pictu img {
+    transition: 0.3s;
+    display: block;
+    width: 100%;
+}
+.pictu:hover::after {
+    background-color: rgba(189, 183, 107, 0.1);
+}
+.index{
+    background-color: rgb(255, 255, 255);
+    margin: 0; 
+    width: 100%;
+    height: auto;  
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+main{
+    padding: 200px;
+    margin-left: 20px;
+    margin-right: 20px;
+    box-shadow: 40px;
+    background-color: rgb(169, 211, 134);
+}
+.search{
+    width: 20px;
+    padding: 1,5px;
+}
+.barre{
+    list-style: none;
+    display:block;
+}
+.search2{
+    width: 15%;
+    padding-top: 7px;
+    font-size: 14px;
+    margin-left: 70%;
+    border-radius: 50px;
+}
