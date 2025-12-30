@@ -27,7 +27,7 @@
                         <a class="nav-link" href="index.php">Accueil</a>
                     </li>
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
-                        <a class="nav-link" href="docs/typography.html">À propos</a>
+                        <a class="nav-link" href="apropos.php">À propos</a>
                     </li>
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
                         <a class="nav-link" href="docs/installation.html">Contact</a>
