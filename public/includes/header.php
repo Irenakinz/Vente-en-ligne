@@ -30,7 +30,7 @@
                         <a class="nav-link" href="apropos.php">À propos</a>
                     </li>
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
-                        <a class="nav-link" href="docs/installation.html">Contact</a>
+                        <a class="nav-link" href="contact-us.php">Contact</a>
                     </li>
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
                         <a class="nav-link" href="nos-produits.php">Nos produits</a>
@@ -89,21 +89,15 @@
                         <span class="h6 dropdown-header">Michael Williams</span>
                         <span class="">chabni@gmail.com</span>
                     </li>
-                    <li><hr class="dropdown-divider"></li>
+                    <li><hr class="dropdown-divider"></li> 
                     <li>
-                        <a class="dropdown-item" href="account-profile.html">
-                        <i class="fi-user opacity-75 me-2"></i>
-                        Mon profile
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="account-listings.html">
+                        <a class="dropdown-item" href="produits-commandes.php">
                         <i class="fi-layers opacity-75 me-2"></i>
                         Mes commandes
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="account-reviews.html">
+                        <a class="dropdown-item" href="produits-en-panier.php">
                         <i class="fi-star opacity-75 me-2"></i>
                         Mon pannier
                         </a>
