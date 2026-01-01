@@ -44,7 +44,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="ps-4" style="width: 60px;">#</th>
-                                <th style="width: 80px;">Image</th>
+                                <th style="width: 80px;">Image </th>
                                 <th>Titre et description</th>
                                  
                                 <th style="width: 120px;" class="text-center">Quantité</th>
@@ -201,31 +201,37 @@
       </div>
     </main>
 
-    <!-- Modal d'ajout de produit -->
-    <div class="modal fade" id="addProduct" data-bs-backdrop="static" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <!-- Modal d'ajout de produit -->  
+    <div class="modal fade" id="addProduct" data-bs-backdrop="static" tabindex="-1" aria-labelledby="addProductLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Ajouter un nouveau produit</h5>
+                    <h5 class="modal-title" id="addProductLabel">Ajouter un nouveau produit</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 
                 <div class="modal-body">
-                    <form class="needs-validation" novalidate="">
-                        <div class="row g-4">
-                            <!-- Image du produit -->
-                        
+                    <!-- Message du serveur --> 
 
+                    <div id="server-message-create" class="mb-4" style="display: none;">
+                        <div class="alert create alert-dismissible fade show" role="alert">
+                            <span id="message-text-create"></span>
+                            <button type="button" class="btn-close" onclick="generalHideMessage('server-message-create')"></button>
+                        </div>
+                    </div>
+                    
+                    <form id="createProduitForm" class="needs-validation" onsubmit="return false"  validate name="createProduitForms">
+                        <div class="row g-4">
                             <!-- Informations du produit -->
                             <div class="col-md-12">
                                 <div class="vstack gap-3">
-                                    <!-- image -->
+                                    <!-- Image du produit -->
                                     <div class="position-relative">
-                                        <label for="product-title" class="form-label">
+                                        <label for="product-file" class="form-label">
                                             <i class="fi-tag text-muted me-2"></i>Image du produit *
                                         </label> 
-                                        <input type="file" class="form-control" id="product-file" placeholder="Ex: Casque Audio Pro X" required>
-                                        <div class="invalid-feedback">Veuillez reneigner l'image.</div>
+                                        <input type="file" name="photo" class="form-control" id="product-file" accept="image/*" required>
+                                        <div class="invalid-feedback">Veuillez sélectionner une image.</div>
                                     </div>
 
                                     <!-- Titre du produit -->
@@ -233,7 +239,7 @@
                                         <label for="product-title" class="form-label">
                                             <i class="fi-tag text-muted me-2"></i>Titre du produit *
                                         </label>
-                                        <input type="text" class="form-control" id="product-title" placeholder="Ex: Casque Audio Pro X" required>
+                                        <input type="text" name="titre" class="form-control" id="product-title" placeholder="Ex: Casque Audio Pro X" required>
                                         <div class="invalid-feedback">Veuillez saisir un titre pour le produit.</div>
                                     </div>
 
@@ -242,15 +248,24 @@
                                         <label for="product-category" class="form-label">
                                             <i class="fi-layers text-muted me-2"></i>Catégorie *
                                         </label>
-                                        <select class="form-select" id="product-category" required>
+                                        <select class="form-select" name="categorie_id" id="product-category" required>
                                             <option value="" selected disabled>Sélectionnez une catégorie</option>
-                                            <option value="audio">Audio</option>
-                                            <option value="photo">Photo & Vidéo</option>
-                                            <option value="wearable">Wearable</option>
-                                            <option value="sport">Sport</option>
-                                            <option value="accessoires">Accessoires</option>
-                                            <option value="informatique">Informatique</option>
-                                            <option value="maison">Maison</option>
+                                            <?php
+                                            $responseCategorie = getCategorie();
+                                            if(isset($responseCategorie["success"]) && $responseCategorie["success"]){
+                                                foreach($responseCategorie['data'] ?? $responseCategorie as $categorie){
+                                                    if(is_array($categorie) && isset($categorie["id"])){
+                                            ?>
+                                            <option value="<?= htmlspecialchars($categorie["id"]) ?>">
+                                                <?= htmlspecialchars($categorie["description"]) ?>
+                                            </option>
+                                            <?php
+                                                    }
+                                                } 
+                                            } else { 
+                                                echo "<option value=''>Aucune catégorie trouvée</option>";
+                                            }
+                                            ?> 
                                         </select>
                                         <div class="invalid-feedback">Veuillez sélectionner une catégorie.</div>
                                     </div>
@@ -260,11 +275,10 @@
                                         <label for="product-description" class="form-label">
                                             <i class="fi-align-left text-muted me-2"></i>Description courte *
                                         </label>
-                                        <textarea class="form-control" id="product-description" rows="3" placeholder="Décrivez brièvement le produit..." required></textarea>
+                                        <textarea name="description" class="form-control" id="product-description" rows="3" placeholder="Décrivez brièvement le produit..." maxlength="200" required></textarea>
                                         <div class="invalid-feedback">Veuillez saisir une description pour le produit.</div>
                                         <div class="form-text">Maximum 200 caractères.</div>
                                     </div>
-    
                                 </div>
                             </div>
 
@@ -274,19 +288,19 @@
                                     <!-- Quantité en stock -->
                                     <div class="col-md-6 position-relative">
                                         <label for="product-quantity" class="form-label">
-                                            <i class="fi-package text-muted me-2"></i>Quantité en stock *
+                                            <i class="fi-package text-muted me-2"></i>Quantité en stock initiale *
                                         </label>
-                                        <input type="number" class="form-control" id="product-quantity" min="0" placeholder="0" required>
+                                        <input type="number" name="quantite" class="form-control" id="product-quantity" min="0" placeholder="0" required>
                                         <div class="invalid-feedback">Veuillez saisir la quantité en stock.</div>
                                     </div>
 
                                     <!-- Prix unitaire -->
                                     <div class="col-md-6 position-relative">
                                         <label for="product-price" class="form-label">
-                                            <i class="fi-dollar text-muted me-2"></i>Prix unitaire (€) *
+                                            <i class="fi-dollar text-muted me-2"></i>Prix unitaire ($) *
                                         </label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" id="product-price" min="0" step="0.01" placeholder="0.00" required>
+                                            <input type="number" name="prix_unitaire" class="form-control" id="product-price" min="0" step="0.01" placeholder="0.00" required>
                                             <span class="input-group-text">€</span>
                                         </div>
                                         <div class="invalid-feedback">Veuillez saisir un prix valide.</div>
@@ -298,8 +312,18 @@
                         <!-- Boutons d'action -->
                         <div class="modal-footer border-top-0 pt-4">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fi-plus me-2"></i>Ajouter le produit
+                            <button type="button" class="btn btn-primary" id="submit-btn" onclick="createProduit()">
+                                <div class="dot-spinner d-none" id="loading-spinner">
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                </div><i class="fi-plus me-2"></i>
+                                <span id="submit-text">Enregistrement le produit</span>
                             </button>
                         </div>
                     </form>
@@ -307,6 +331,25 @@
             </div>
         </div>
     </div>
+ 
+
+    <style>
+    /* Style pour les messages d'erreur de validation */
+    .was-validated .form-control:invalid,
+    .was-validated .form-select:invalid {
+        border-color: #dc3545;
+    }
+
+    .was-validated .form-control:valid,
+    .was-validated .form-select:valid {
+        border-color: #198754;
+    }
+
+    /* Ajustement pour les boutons dans le modal */
+    .modal-footer .btn {
+        min-width: 120px;
+    }
+    </style>
 
     <style>
         .object-fit-cover {
@@ -341,26 +384,107 @@
     </style>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Prévisualisation de l'image 
-    
+    let URL = "../../app/index.php?action=produit/create";
+    // Fonction principale de connexion
+    function createProduit() {
+        let form = document.forms.createProduitForms;
+        let submit_btn = document.getElementById("submit-btn");
+        let submit_text = document.getElementById("submit-text");
+        let loading_spinner = document.getElementById("loading-spinner");
+        
         // Validation du formulaire
-        const form = document.querySelector('#addProduct form');
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                if (!form.checkValidity()) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            });
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+            return false;
         }
-    });
+ 
+        // Désactiver le bouton et afficher le spinner
+        submit_btn.disabled = true;
+        submit_text.textContent = "Enregistrement en cours...";
+        loading_spinner.classList.remove("d-none");
+        
+        // Préparation des données à envoyer
+        let formData = new FormData(form);   
+ 
+        // Options pour la requête fetch
+        const options = {  
+            method: 'POST',  
+            body: formData  
+            // Si votre API attend du JSON, utilisez ceci :
+            // headers: { 'Content-Type': 'application/json' },
+            // body: JSON.stringify({ email: email, password: password }) 
+        };
+        
+        // Envoi de la requête AJAX
+        fetch(URL, options)
+        .then(response => {
+        // Vérifier le statut HTTP
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return response.json();
+        })
+        .then(data => {
+        // Traitement de la réponse
+        console.log("Réponse du serveur:", data);
+        
+        if (data.success) {
+        
+            setTimeout(()=>{ 
+                window.location.href = window.location.href;
+            },5000);
+
+            // Connexion réussie
+            generalShowMessage(
+                data.message, type = 'success',
+                messageDiv="server-message-create",
+                messageText="message-text-create",
+                alertDiv=".alert.create"
+            )
+
+            loading_spinner.classList.add("d-none");
+            submit_text.textContent = "Enregistrement le produit";
+            submit_btn.disabled = false;
+            form.reset();
+            
+        } 
+        else {
+            // Erreur de connexion
+            generalShowMessage(
+                data.message, type = 'success',
+                messageDiv="server-message-create",
+                messageText="message-text-create",
+                alertDiv=".alert.create"
+            )
+            
+            // Réactiver le bouton
+            submit_btn.disabled = false;
+            submit_text.textContent = "Enregistrement le produit";
+            loading_spinner.classList.add("d-none");
+        }
+        })
+        .catch(error => {
+        // Erreur réseau ou autre
+        console.error("Erreur:", error);
+        generalShowMessage(
+            data.message, type = 'success',
+            messageDiv="server-message-create",
+            messageText="message-text-create",
+            alertDiv=".alert.create"
+        )
+        
+        // Réactiver le bouton
+        submit_btn.disabled = false;
+        submit_text.textContent = "Enregistrement le produit";
+        loading_spinner.classList.add("d-none");
+        }); 
+    }
+
     </script>
 
-  <!-- footer de la page -->
-  <?php include("includes/footer.php")?>
-  <!-- footer de la page -->
+    <!-- footer de la page -->
+    <?php include("includes/footer.php")?>
+    <!-- footer de la page -->
   
 </body>
 </html>

@@ -1,4 +1,13 @@
-<head>
+
+  <?php 
+  
+    session_start() ;
+    include_once("../../app/conrollerAdmin.php");
+    include_once("../../app/controllerCategorie.php");
+
+  ?>
+
+  <head>
     <meta charset="utf-8">
 
     <!-- Viewport -->
@@ -17,6 +26,9 @@
     <link rel="icon" type="image/png" href="../assets/app-icons/icon-32x32.png" sizes="32x32">
     <link rel="apple-touch-icon" href="../assets/app-icons/icon-180x180.png">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+
     <!-- Theme switcher (color modes) -->
     <script src="../assets/js/theme-switcher.js"></script>
 
@@ -34,7 +46,16 @@
     <link rel="preload" href="../assets/css/theme.min.css" as="style">
     <link rel="preload" href="../assets/css/theme.rtl.min.css" as="style">
     <link rel="stylesheet" href="../assets/css/theme.min.css" id="theme-styles">
+    <link rel="stylesheet" href="../assets/css/anime.css">
 
     <!-- Customizer -->
     <script src="../assets/js/customizer.min.js"></script>
   </head>
+
+  <?php
+
+  if((!isset($_SESSION['user']) && empty($_SESSION['user']))
+    || ($_SESSION['user']['role'] !== "admin" && $_SESSION['user']['role'] !== "root")) 
+        header("Location:index.php");
+   
+  ?>

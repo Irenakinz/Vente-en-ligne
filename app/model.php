@@ -4,7 +4,7 @@
     function uploadFile($file) {
         try {
             if (!isset($file['tmp_name']) || empty($file['tmp_name'])) {
-                throw new Exception("Fichier invalide", 400);
+                throw new Exception("L'image que vous avez soumis est invalide, merci de bien verifier ce champ", 400);
             }
 
             $folderImages = "../medias/";
@@ -30,11 +30,12 @@
 
 
     // gestionnaires des reponses serveurs
-    function getResponse($message, $code, $status = false){
+    function getResponse($message, $code, $success = false,$data = []){
         return [
             "code" => $code,
             "message" => $message,
-            "status" => $status
+            "success" => $success,
+            "data" => $data
         ];
     }
 
@@ -65,11 +66,12 @@
     } 
 
     // GESTIONS DES ADMINISTRATEURS ..................................
-    // ATRIBUTS : Id Nom Prénom Email Password Photo Genre Statut
+    //||||||| ATRIBUTS : Id Nom Prénom Email Password Photo Genre Statut
 
     function addAdmin($adminData){
-        $sql = "INSERT INTO admin (nom, prenom, email, password, photo, genre)
-                VALUES (:nom, :prenom, :email, :password, :photo, :genre)";
+        $sql = "INSERT INTO admin (nom, prenom, email, password, photo, genre, role)
+                VALUES (:nom, :prenom, :email, :password, :photo, :genre, :role)";
+                
 
         try {
             $pdo = getConnection();
@@ -77,6 +79,7 @@
             $hashedPassword = password_hash($adminData['password'], PASSWORD_BCRYPT);
 
             $photo = uploadFile($adminData['photo']);
+            
             if (!$photo) {
                 return getResponse("Erreur lors de l'upload de la photo", 400, false);
             }
@@ -88,9 +91,11 @@
                 ':email' => $adminData['email'],
                 ':password' => $hashedPassword,
                 ':photo' => $photo,
-                ':genre' => $adminData['genre']
+                ':genre' => $adminData['genre'],
+                ':role' =>$adminData['role']
             ]);
 
+            
             return getResponse("Admin ajouté avec succès", 201, true);
 
         } catch (Exception $e) {
@@ -105,15 +110,16 @@
 
         try {
             $pdo = getConnection();
-
+            $photoStr = isset($adminData["photo_str"]) ? $adminData["photo_str"] : "";
             $photo = $adminData['photo'];
-            if (is_array($photo)) {
+            
+            if (!empty($photo) && isset($photo["tmp_name"]) && !empty($photo["tmp_name"])) {
                 $photo = uploadFile($photo);
+                if (!$photo) 
+                    return getResponse("Erreur lors de l'upload de la photo", 400, false);
+                
             }
-
-            if (!$photo) {
-                return getResponse("Erreur lors de l'upload de la photo", 400, false);
-            }
+            else $photo = $photoStr;
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
@@ -141,10 +147,10 @@
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if (!$results) {
-                return getResponse("Aucun admin trouvé", 404, false);
+                return getResponse("Aucun admin trouvé", 404, false,[]);
             }
 
-            return $results;
+            return getResponse("visualiser les admins trouves", 404, true,$results);
 
         } catch (Exception $e) {
             throw $e;
@@ -165,12 +171,13 @@
                 return getResponse("Admin introuvable", 404, false);
             }
 
-            return $admin;
+            return getResponse("...info", 404, false,$admin);
 
         } catch (Exception $e) {
             throw $e;
         }
     }
+    
     function disableAdmin($id, $statut = 0){
         try {
             $pdo = getConnection();
@@ -193,7 +200,7 @@
         }
     }
  
-    // ...........................................................
+    //||||||| ...........................................................
 
     // GESTION DES CLIENTS
     // Atributs : Id Nom Prénom Email Password  Adresse Photo Genre
@@ -368,8 +375,7 @@
         } catch (Exception $e) {
             throw $e;
         }
-    }
-
+    } 
 
     function getAllCategorie()
     {
@@ -384,13 +390,32 @@
                 return getResponse("Aucune catégorie trouvée", 404, false);
             }
 
-            return $categories;
+            return getResponse("..categorie trouve avec success", 200, true,$categories);
 
         } catch (Exception $e) {
             throw $e;
         }
     }
 
+    function getCategorieById($id)
+    {
+        $sql = "SELECT * FROM categorie  WHERE id=".$id." ORDER BY id DESC";
+
+        try {
+            $pdo = getConnection();
+            $stmt = $pdo->query($sql);
+            $categories = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$categories) {
+                return getResponse("Aucune catégorie trouvée", 404, false);
+            }
+
+            return getResponse("..categorie trouve avec success", 200, true,$categories);
+
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
 
     // ...........................................................
 
@@ -399,7 +424,7 @@
 
     function addProduit($produit)
     {
-        $sql = "INSERT INTO produit
+        $sql = "INSERT INTO produits
                 (titre, description, categorie_id, quantite, prix_unitaire, image, statut)
                 VALUES
                 (:titre, :description, :categorie_id, :quantite, :prix_unitaire, :image, 1)";
@@ -407,7 +432,7 @@
         try {
             $pdo = getConnection();
 
-            $image = uploadFile($produit['image']);
+            $image = uploadFile($produit['photo']);
             if (!$image) {
                 return getResponse("Erreur lors de l'upload de l'image", 400, false);
             }
@@ -431,7 +456,7 @@
 
     function updateProduit($produit)
     {
-        $sql = "UPDATE produit SET  titre=:titre,  description=:description,
+        $sql = "UPDATE produits SET  titre=:titre,  description=:description,
                 categorie_id=:categorie_id,  quantite=:quantite,
                 prix_unitaire=:prix_unitaire, image=:image
                 WHERE id=:id LIMIT 1";
@@ -439,7 +464,7 @@
         try {
             $pdo = getConnection();
 
-            $image = $produit['image'];
+            $image = $produit['photo'];
 
             if (is_array($image)) {
                 $image = uploadFile($image);
@@ -470,7 +495,7 @@
     function getAllProduit()
     {
         $sql = "SELECT p.*, c.description AS categorie
-                FROM produit p
+                FROM produits p
                 INNER JOIN categorie c ON p.categorie_id = c.id
                 ORDER BY p.id DESC";
 
@@ -492,7 +517,7 @@
 
     function getProduitById($id)
     {
-        $sql = "SELECT * FROM produit WHERE id = :id LIMIT 1";
+        $sql = "SELECT * FROM produits WHERE id = :id LIMIT 1";
 
         try {
             $pdo = getConnection();
@@ -514,7 +539,7 @@
 
     function getProduitByCategorie($categorie_id)
     {
-        $sql = "SELECT * FROM produit 
+        $sql = "SELECT * FROM produits 
                 WHERE categorie_id = :categorie_id AND statut = 1
                 ORDER BY id DESC";
 
@@ -541,7 +566,7 @@
         try {
             $pdo = getConnection();
 
-            $sql = "UPDATE produit SET statut = :statut WHERE id = :id";
+            $sql = "UPDATE produits SET statut = :statut WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ':statut' => $statut,
@@ -935,13 +960,13 @@
 
     // GESTION DES LOGS D'ACTIVITÉS UTILISATEURS (ADMIN SEULEMENT)
     // Attributs : id, user_email, date_connexion, date_deconnexion,
-    // status (0,1), adresse_ip, navigateur 
+    // success (0,1), adresse_ip, navigateur 
 
     // Ajouter un log (connexion admin)
     function addLog($log)
     {
         $sql = "INSERT INTO logs_activites
-                (user_email, date_connexion, status, adresse_ip, navigateur)
+                (user_email, date_connexion, success, adresse_ip, navigateur)
                 VALUES (:user_email, NOW(), 1, :adresse_ip, :navigateur)"; 
         try {
             $pdo = getConnection();
@@ -1030,8 +1055,8 @@
     function closeLogSession($user_email)
     {
         $sql = "UPDATE logs_activites
-                SET date_deconnexion = NOW(), status = 0
-                WHERE user_email = :user_email AND status = 1";
+                SET date_deconnexion = NOW(), success = 0
+                WHERE user_email = :user_email AND success = 1";
 
         try {
             $pdo = getConnection();
@@ -1070,7 +1095,7 @@
             // Supprimer le mot de passe avant retour
             unset($admin['password']);
 
-            return $admin;
+            return getResponse("Log de connexion enregistré", 200, true,$admin);
 
         } catch (Exception $e) {
             throw $e;
@@ -1107,4 +1132,5 @@
         }
     }
 
-?>
+   
+?> 

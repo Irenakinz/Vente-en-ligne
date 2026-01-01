@@ -40,3 +40,93 @@
     <!-- Bootstrap + Theme scripts -->
     <script src="../assets/js/theme.min.js"></script>
   
+    <script>
+      
+      function hideMessage() {
+        document.getElementById('server-message').style.display = 'none';
+      }
+
+      function generalHideMessage(server_message = "server-message") {
+        document.getElementById(server_message).style.display = 'none';
+      }
+
+       // Fonction pour afficher les messages du serveur
+      function generalShowMessage(message, type = 'info',
+        messageDiv_="server-message",
+        messageText_="message-text",
+        alertDiv_=".alert") 
+      {
+        const messageDiv = document.getElementById(messageDiv_);
+        const messageText = document.getElementById(messageText_);
+        const alertDiv = messageDiv.querySelector(alertDiv_);
+        
+        // Définir le type d'alerte (couleur)
+        const alertTypes = {
+          'success': 'alert-success',
+          'error': 'alert-danger',
+          'warning': 'alert-warning',
+          'info': 'alert-info'
+        };
+        
+        // Retirer toutes les classes d'alerte
+        alertDiv.classList.remove('alert-success', 'alert-danger', 'alert-warning', 'alert-info');
+        // Ajouter la classe correspondante au type
+        alertDiv.classList.add(alertTypes[type] || 'alert-info');
+        
+        // Mettre à jour le texte et afficher
+        messageText.textContent = message;
+        messageDiv.style.display = 'block';
+        
+        // Masquer automatiquement après 10 secondes (optionnel)
+        setTimeout(hideMessage, 10000);
+      }
+
+      // Fonction pour afficher les messages du serveur
+      function showMessage(message, type = 'info', alertDiv_ ='.alert') {
+        const messageDiv = document.getElementById('server-message');
+        const messageText = document.getElementById('message-text');
+        const alertDiv = messageDiv.querySelector(alertDiv_);
+        
+        // Définir le type d'alerte (couleur)
+        const alertTypes = {
+          'success': 'alert-success',
+          'error': 'alert-danger',
+          'warning': 'alert-warning',
+          'info': 'alert-info'
+        };
+        
+        // Retirer toutes les classes d'alerte
+        alertDiv.classList.remove('alert-success', 'alert-danger', 'alert-warning', 'alert-info');
+        // Ajouter la classe correspondante au type
+        alertDiv.classList.add(alertTypes[type] || 'alert-info');
+        
+        // Mettre à jour le texte et afficher
+        messageText.textContent = message;
+        messageDiv.style.display = 'block';
+        
+        // Masquer automatiquement après 10 secondes (optionnel)
+        setTimeout(hideMessage, 10000);
+      }
+    
+      // Version simplifiée (sans Bootstrap)
+      function hideModalSimple(modalId) {
+          const modal = document.getElementById(modalId);
+          if (modal) {
+              modal.style.display = 'none';
+              modal.classList.remove('show');
+              modal.setAttribute('aria-hidden', 'true');
+              
+              // Gérer le body
+              document.body.classList.remove('modal-open');
+              document.body.style.overflow = 'auto';
+              document.body.style.paddingRight = '0';
+              
+              // Supprimer le backdrop
+              const backdrops = document.getElementsByClassName('modal-backdrop');
+              while (backdrops.length > 0) {
+                  backdrops[0].parentNode.removeChild(backdrops[0]);
+              }
+          }
+      }
+
+    </script>
