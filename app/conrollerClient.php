@@ -19,9 +19,9 @@
                         && !empty($data["email"]) && !empty($data["password"])) {
                             $email = htmlspecialchars($data["email"]);
                             $password = htmlspecialchars($data["password"]);
-                            $response = loginAdmin($email, $password);
+                            $response = loginClient($email, $password);
 
-                            if($response["success"]) $_SESSION['user'] = $response["data"]; 
+                            if($response["success"]) $_SESSION['client'] = $response["data"]; 
 
                             return $response;
                     } 
@@ -29,18 +29,18 @@
                         throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire",404); 
                     break;
 
-                case "update": 
-                    if(isClientValid($data) && isset($data["id"]) && !empty($data["id"])) {
-                        $response = updateAdmin($data);
-                        if($response["success"]) {
-                            $_SESSION['user'] = getAdminById($data["id"]);
-                        }
+                // case "update":  client
+                //     if(isClientValid($data) && isset($data["id"]) && !empty($data["id"])) {
+                //         $response = updateAdmin($data);
+                //         if($response["success"]) {
+                //             $_SESSION['user'] = getAdminById($data["id"]);
+                //         }
 
-                        return $response;
-                    }
-                    else 
-                        throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire[".implode(array_keys($data)),404); 
-                    break;
+                //         return $response;
+                //     }
+                //     else 
+                //         throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire[".implode(array_keys($data)),404); 
+                //     break;
 
                 case "create":
                     if(isClientValid($data)) {

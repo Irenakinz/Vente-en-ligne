@@ -184,50 +184,100 @@
               $lastProduits = $ResponseProduit["data"];
               foreach($lastProduits as $produit) {
         ?>
-              <!-- Produit 1 -->
-              <div class="swiper-slide h-auto">
-                <article class="card h-100 hover-effect-scale">
-                  <div class="card-img-top position-relative overflow-hidden"> 
-                    <div class="" style="width:auto;">
-                      <img src="<?php echo BASE_URL; ?>/Vente-en-ligne/medias/<?=$produit["image"]?>" alt="Kit d'outils multifonctions" style="width:100%;height:230px;object-fit:cover">
+             <!-- Produit - Version boutons horizontaux -->
+            <div class="swiper-slide h-auto">
+                <article class="card h-100 hover-effect-scale border-0 shadow-sm hover-shadow-lg transition-all">
+                    <!-- Image avec overlay au survol -->
+                    <div class="card-img-top position-relative overflow-hidden rounded-top" 
+                        style="height: 200px;">
+                        <img src="<?php echo BASE_URL; ?>/Vente-en-ligne/medias/<?=$produit["image"]?>" 
+                            alt="<?= htmlspecialchars($produit["titre"]) ?>" 
+                            class="w-100 h-100 object-fit-cover transition-transform"
+                            style="transition: transform 0.3s ease;">
+                        
+                        <!-- Overlay au survol -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-0 hover-effect-target d-flex align-items-center justify-content-center opacity-0 transition-all">
+                            <div class="text-center text-white p-3">
+                                <i class="fi-eye fs-3 mb-2"></i>
+                                <p class="small mb-0">Voir les détails</p>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                  <div class="card-body pb-3">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                      <div class="fs-xs text-body-secondary me-3"><?=formatDateFrancais($produit["date_save"])?></div>
-                      <div class="d-flex gap-2 position-relative z-2"> 
-                      </div>
+                    
+                    <!-- Corps de la carte -->
+                    <div class="card-body">
+                        <!-- Catégorie -->
+                        <div class="mb-2">
+                            <span class="badge bg-light text-dark border">
+                                <i class="fi-tag me-1"></i><?= htmlspecialchars($produit["categorie"]) ?>
+                            </span>
+                        </div>
+                        
+                        <!-- Titre -->
+                        <h3 class="h6 mb-2 text-dark line-clamp-1">
+                            <?= htmlspecialchars($produit["titre"]) ?>
+                        </h3>
+                        
+                        <!-- Description -->
+                        <p class="text-body-secondary fs-xs mb-3 line-clamp-2">
+                            <?= htmlspecialchars($produit["description"]) ?>
+                        </p>
+                        
+                        <!-- Prix et date -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="h5 text-primary fw-bold mb-0">
+                                <?= number_format($produit["prix_unitaire"], 0, ',', ' ') ?> Fb
+                            </div>
+                            <div class="text-muted fs-xs">
+                                <?=formatDateFrancais($produit["date_save"])?>
+                            </div>
+                        </div>
+                        
+                        <!-- Boutons d'action HORIZONTAUX -->
+                        <div class="d-flex gap-2">
+                            <!-- Bouton Commander (principal) -->
+                            <button type="button" 
+                                    class="btn btn-success flex-fill d-flex align-items-center justify-content-center gap-1 py-2"
+                                    onclick="commanderProduit(<?=$produit['id']?>)">
+                                <i class="fi-shopping-bag"></i>
+                                <span class="small">Commander</span>
+                            </button>
+                            
+                            <!-- Bouton Panier (secondaire) -->
+                            <button type="button" 
+                                    class="btn btn-outline-primary d-flex align-items-center justify-content-center px-3 py-2"
+                                    onclick="ajoutAuPanier(<?=$produit['id']?>)"
+                                    title="Ajouter au panier" id="submit_btn_<?=$produit['id']?>">
+                                <i class="fi-shopping-cart"></i>
+                                <div class="dot-spinner d-none" id="loading_spinner_<?=$produit['id']?>">
+                                  <div class="dot-spinner__dot"></div>
+                                  <div class="dot-spinner__dot"></div>
+                                  <div class="dot-spinner__dot"></div>
+                                  <div class="dot-spinner__dot"></div>
+                                  <div class="dot-spinner__dot"></div>
+                                  <div class="dot-spinner__dot"></div>
+                                  <div class="dot-spinner__dot"></div>
+                                  <div class="dot-spinner__dot"></div>
+                                </div>
+                            </button>
+                        </div>
                     </div>
-                    <h3 class="h6 mb-2">
-                      <span class="hover-effect-underline stretched-link me-1" href="#!"><?=$produit["titre"]?></span>
-                      <!-- <span class="fs-xs fw-normal text-body-secondary">32 pièces</span> -->
-                    </h3>
-                    <p class="text-body-secondary fs-xs mb-2"><?=$produit["description"]?></p>
-                    <div class="d-flex align-items-center mt-auto justify-content-between">
-                      <div class="h6 text-primary mb-0"> 
-                        <?=$produit["prix_unitaire"]?>Fb
-                      </div>
-                      <button  style="cursor: pointer; position: relative; z-index: 10;" class="btn btn-primary btn-sm d-flex gap-1" onclick="ajoutAuPanier(<?=$produit['id']?>)">
-                        <i class="fi-shopping-cart"></i>Ajouter
-                      </button>
+                    
+                    <!-- Footer loading_spinner_ | submit_btn_ --> 
+                    <div class="card-footer bg-light bg-opacity-50 border-0 pt-0">
+                        <div class="d-flex justify-content-between align-items-center fs-xs text-body-secondary">
+                            <div class="d-flex align-items-center gap-1">
+                                <?=$produit["icone"]?>
+                                <span><?= htmlspecialchars($produit["categorie"]) ?></span>
+                            </div>
+                            <div class="d-flex align-items-center gap-1 text-success">
+                                <i class="fi-check-circle"></i>
+                                <span>Disponible</span>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-4">
-                    <div class="border-top pt-3">
-                      <div class="row row-cols-2 g-2 fs-xs">
-                        <div class="col d-flex align-items-center gap-1">
-                          <?=$produit["icone"]?>
-                          <?=$produit["categorie"]?>
-                        </div> 
-                        <div class="col d-flex align-items-center gap-1">
-                          <i class="fi-box"></i>
-                          En stock
-                        </div> 
-                      </div>
-                    </div>
-                  </div>
                 </article>
-              </div> 
+            </div>
         <?php
               }
             }
@@ -250,16 +300,5 @@
     <!-- FOOTER ...........................-->
    
 
-</body></html>
-
-
-
-
-
-
-
-
-
-
-
+</body></html> 
 

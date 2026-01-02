@@ -629,7 +629,7 @@
     // Vérifie si le stock est suffisant
     function verifyStock($produit_id, $quantite)
     {
-        $sql = "SELECT quantite FROM produit WHERE id = :id AND statut = 1";
+        $sql = "SELECT quantite FROM produits WHERE id = :id AND statut = 1";
 
         try {
             $pdo = getConnection();
@@ -645,7 +645,7 @@
                 return getResponse("Stock insuffisant (quantite restant:".$produit['quantite'].")", 400, false);
             }
 
-            return true;
+            return getResponse("Stock valable", 200, true);;
 
         } catch (Exception $e) {
             throw $e;
@@ -660,7 +660,7 @@
 
             $checkStock = verifyStock($panier['produit_id'], $panier['quantite']);
 
-            if ($checkStock !== true) {
+            if ($checkStock["success"] !== true) {
                 return $checkStock;
             }
 
@@ -684,11 +684,11 @@
                     ':id' => $existing['id']
                 ]);
 
-                return getResponse("Quantité du panier mise à jour", 200, true);
+                return getResponse("Quantité du panier mise à jour avec success", 200, true);
             }
 
             // Récupération du prix unitaire
-            $stmtPrice = $pdo->prepare("SELECT prix_unitaire FROM produit WHERE id = :id");
+            $stmtPrice = $pdo->prepare("SELECT prix_unitaire FROM produits WHERE id = :id");
             $stmtPrice->execute([':id' => $panier['produit_id']]);
             $prix = $stmtPrice->fetchColumn();
 
@@ -760,7 +760,7 @@
     {
         $sql = "SELECT p.*, pr.titre, pr.image
                 FROM panier p
-                INNER JOIN produit pr ON p.produit_id = pr.id
+                INNER JOIN produits pr ON p.produit_id = pr.id
                 WHERE p.client_id = :client_id";
 
         try {
@@ -823,7 +823,7 @@
 
             // Récupérer le prix unitaire
             $stmtPrice = $pdo->prepare(
-                "SELECT prix_unitaire FROM produit WHERE id = :id"
+                "SELECT prix_unitaire FROM produits WHERE id = :id"
             );
 
             $stmtPrice->execute([':id' => $commande['produit_id']]);
@@ -903,7 +903,7 @@
     function getAllCommandes()
     {
         $sql = "SELECT c.*, p.titre, cl.nom, cl.prenom
-                FROM commande c INNER JOIN produit p ON c.produit_id = p.id
+                FROM commande c INNER JOIN produits p ON c.produit_id = p.id
                 INNER JOIN client cl ON c.client_id = cl.id ORDER BY c.date_commande DESC";
 
         try {
@@ -1107,7 +1107,7 @@
         }
     }
 
-    // GESTION DES UTILISATEURS .............................................
+    // GESTION DES UTILISATEURS ..............................................
     
     function loginAdmin($email, $password)
     {
@@ -1141,7 +1141,7 @@
 
     function loginClient($email, $password)
     {
-        $sql = "SELECT * FROM admin WHERE client = :email LIMIT 1";
+        $sql = "SELECT * FROM clients WHERE email = :email LIMIT 1";
 
         try {
             $pdo = getConnection();
@@ -1162,7 +1162,8 @@
             // Supprimer le mot de passe avant retour
             unset($client['password']);
 
-            return $client;
+            return getResponse("Connexion reussit avec success", 200, true,$client);
+             
 
         } catch (Exception $e) {
             throw $e;

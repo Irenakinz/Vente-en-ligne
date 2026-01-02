@@ -320,7 +320,7 @@
           <div class="d-grid gap-3 mb-4">
             <!-- Bouton Connexion -->
             <button type="button" class="btn btn-primary btn-lg d-flex align-items-center justify-content-center gap-2" 
-                    onclick="redirectToLogin()">
+                    onclick="showModalById('loginClientModal','authRequired')">
               <i class="fi-login"></i>
               <span>Se connecter à mon compte</span>
             </button>
@@ -355,8 +355,7 @@
 
 
 
-<!-- MODAL POUR LE LOGIN -->
- <!-- Modal de connexion client -->
+<!-- MODAL POUR LE LOGIN --> 
 <div class="modal fade" id="loginClientModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loginClientModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 450px;" role="document">
     <div class="modal-content">
@@ -366,10 +365,10 @@
       </div>
       
       <div class="modal-body p-4">
-        <div id="server-message" class="mb-4" style="display: none;">
-          <div class="alert alert-dismissible fade show" role="alert">
-            <span id="message-text"></span>
-            <button type="button" class="btn-close" onclick="hideMessage()"></button>
+        <div id="server-message-login" class="mb-4" style="display: none;">
+          <div class="alert login alert-dismissible fade show" role="alert">
+            <span id="message-text-login"></span>
+            <button type="button" class="btn-close" onclick="hideMessage('server-message-login')"></button>
           </div>
         </div>
 
@@ -392,18 +391,11 @@
               </button>
               <div class="invalid-feedback">Veuillez saisir votre mot de passe</div>
             </div>
-          </div>
+          </div> 
 
-          <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="form-check">
-              <input type="checkbox" name="remember" class="form-check-input" id="remember-me">
-              <label for="remember-me" class="form-check-label">Se souvenir de moi</label>
-            </div>
-            <a href="#" class="text-decoration-none">Mot de passe oublié ?</a>
-          </div>
-
-          <button type="submit" class="btn btn-primary w-100 py-3" id="submit-btn" onclick="loginUser()">
-            <div class="dot-spinner d-none" id="loading-spinner">
+          <button type="submit" class="btn btn-primary w-100 py-3" id="submit-btn-login" 
+          onclick="loginUser()">
+            <div class="dot-spinner d-none" id="loading-spinner-login">
               <div class="dot-spinner__dot"></div>
               <div class="dot-spinner__dot"></div>
               <div class="dot-spinner__dot"></div>
@@ -413,14 +405,14 @@
               <div class="dot-spinner__dot"></div>
               <div class="dot-spinner__dot"></div>
             </div>
-            <span id="submit-text">Se connecter</span>
+            <span id="submit-text-login">Se connecter</span>
           </button>
 
         </form>
 
         <div class="text-center mt-4 pt-3 border-top">
           <p class="text-body-secondary mb-2">Vous n'avez pas encore de compte ?</p>
-          <button type="button" class="btn btn-outline-primary" onclick="switchToRegister()">
+          <button type="button" class="btn btn-outline-primary" onclick="showModalById('createAccount','loginClientModal')">
             Créer un compte gratuitement
           </button>
         </div>
@@ -431,7 +423,7 @@
  <!-- //////////////////////// -->
 
   <!-- Modal pour création de compte -->
-  <div class="modal fade" id="createAccount" data-bs-backdrop="static" tabindex="-1" aria-labelledby="createAccountLabel" aria-hidden="true">
+  <div class="modal fade" id="createAccount" data-bs-backdrop="static" tabindex="-1" aria-labelledby="createAccountLabel" >
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -442,12 +434,7 @@
         <div class="modal-body">
           <!-- Message du serveur -->
           
-          <div id="server-message-create" class="mb-4" style="display: none;">
-              <div class="alert create alert-dismissible fade show" role="alert">
-                  <span id="message-text-create"></span>
-                  <button type="button" class="btn-close" onclick="generalHideMessage('server-message-create')"></button>
-              </div>
-          </div>
+         
           
           <form id="createAccountForm" name="createAccountForm" class="needs-validation" validate onsubmit="return false">
             <div class="row g-4">
@@ -504,11 +491,11 @@
                   
                   <!-- Email -->
                   <div class="position-relative">
-                    <label for="email" class="form-label">Adresse email *</label>
+                    <label for="emailadd" class="form-label">Adresse email *</label>
                     <input type="email" 
                           name="email" 
                           class="form-control" 
-                          id="email" 
+                          id="emailadd" 
                           placeholder="votre@email.com" 
                           required>
                     <div class="invalid-feedback">Veuillez saisir une adresse email valide.</div>
@@ -520,19 +507,15 @@
               <div class="row g-4">
                 <!-- Mot de passe -->
                 <div class="col-md-6 position-relative">
-                  <label for="password" class="form-label">Mot de passe *</label>
+                  <label for="password1" class="form-label">Mot de passe *</label>
                   <div class="password-toggle">
                     <input type="password" 
-                          name="password" 
+                          name="password1" 
                           class="form-control" 
-                          id="password" 
+                          id="password1" 
                           placeholder="Votre mot de passe" 
                           required
-                          minlength="6">
-                    <button type="button" class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-decoration-none text-secondary" 
-                            onclick="togglePassword('password')">
-                      <i class="fi-eye"></i>
-                    </button>
+                          minlength="6"> 
                   </div>
                   <div class="invalid-feedback">Le mot de passe doit contenir au moins 6 caractères.</div>
                   <div class="form-text">Minimum 6 caractères</div>
@@ -547,10 +530,7 @@
                           class="form-control" 
                           id="confirm_password" 
                           placeholder="Confirmez votre mot de passe" 
-                          required>
-                    <button type="button" class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-decoration-none text-secondary" 
-                            onclick="togglePassword('confirm_password')">
-                      <i class="fi-eye"></i>
+                          required> 
                     </button>
                   </div>
                   <div class="invalid-feedback">Les mots de passe ne correspondent pas.</div>
@@ -608,6 +588,14 @@
                 </div>
               </div> 
             </div>
+
+             <div id="server-message-create" class="mb-4" style="display: none;">
+                <div class="alert create alert-dismissible fade show" role="alert">
+                    <span id="message-text-create"></span>
+                    <button type="button" class="btn-close" onclick="generalHideMessage('server-message-create')"></button>
+                </div>
+            </div>
+            
             
             <!-- Boutons d'action -->
             <div class="modal-footer border-top-0 pt-4">
@@ -627,6 +615,7 @@
               </button>
             </div>
           </form>
+          
           
           <!-- Déjà un compte ? -->
           <div class="text-center mt-3">
@@ -668,13 +657,13 @@
         loginModal.show();
       }
     
-      const modal = document.getElementById('createAccount');
-      modal.addEventListener('show.bs.modal', function() {
-          form.reset();
-          form.classList.remove('was-validated');
-          document.getElementById('photo-preview').src = 'https://via.placeholder.com/150x150?text=Photo';
-          document.getElementById('server-message-create').classList.add('d-none');
-        })
+      // const modal = document.getElementById('createAccount');
+      // modal.addEventListener('show.bs.modal', function() {
+      //     form.reset();
+      //     form.classList.remove('was-validated');
+      //     document.getElementById('photo-preview').src = 'https://via.placeholder.com/150x150?text=Photo';
+      //     document.getElementById('server-message-create').classList.add('d-none');
+      //   })
       
       /////////////////////////////////////////////////////////////////////////// -->
     
@@ -694,56 +683,56 @@
      * Affiche un modal Bootstrap 5 par son ID
      * @param {string} modalId - L'ID du modal à afficher
      */
-      function showModalById(modalId,hide_modal_id=null) { 
-        if(hide_modal_id) hideModalSimple(hide_modal_id)
+      // function showModalById(modalId,hide_modal_id=null) { 
+      //   if(hide_modal_id) hideModalSimple(hide_modal_id)
 
-          // Récupérer l'élément modal
-          const modalElement = document.getElementById(modalId);
+      //     // Récupérer l'élément modal
+      //     const modalElement = document.getElementById(modalId);
           
-          if (!modalElement) {
-              console.error(`Modal avec l'ID "${modalId}" non trouvé.`);
-              return false;
-          }
+      //     if (!modalElement) {
+      //         console.error(`Modal avec l'ID "${modalId}" non trouvé.`);
+      //         return false;
+      //     }
           
-          // Vérifier si Bootstrap est disponible
-          if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-              // Créer une instance du modal ou récupérer l'existante
-              let modal = bootstrap.Modal.getInstance(modalElement);
+      //     // Vérifier si Bootstrap est disponible
+      //     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      //         // Créer une instance du modal ou récupérer l'existante
+      //         let modal = bootstrap.Modal.getInstance(modalElement);
               
-              if (!modal) {
-                  // Créer une nouvelle instance
-                  modal = new bootstrap.Modal(modalElement);
-              }
+      //         if (!modal) {
+      //             // Créer une nouvelle instance
+      //             modal = new bootstrap.Modal(modalElement);
+      //         }
               
-              // Afficher le modal
-              modal.show();
-              return true;
-          } else {
-              console.error('Bootstrap 5 n\'est pas chargé.');
-              return false;
-          }
-      }
+      //         // Afficher le modal
+      //         modal.show();
+      //         return true;
+      //     } else {
+      //         console.error('Bootstrap 5 n\'est pas chargé.');
+      //         return false;
+      //     }
+      // }
         
       // Version simplifiée (sans Bootstrap)
-      function hideModalSimple(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.style.display = 'none';
-                modal.classList.remove('show');
-                modal.setAttribute('aria-hidden', 'true');
+      // function hideModalSimple(modalId) {
+      //       const modal = document.getElementById(modalId);
+      //       if (modal) {
+      //           modal.style.display = 'none';
+      //           modal.classList.remove('show');
+      //           modal.setAttribute('aria-hidden', 'true');
                 
-                // Gérer le body
-                document.body.classList.remove('modal-open');
-                document.body.style.overflow = 'auto';
-                document.body.style.paddingRight = '0';
+      //           // Gérer le body
+      //           document.body.classList.remove('modal-open');
+      //           document.body.style.overflow = 'auto';
+      //           document.body.style.paddingRight = '0';
                 
-                // Supprimer le backdrop
-                const backdrops = document.getElementsByClassName('modal-backdrop');
-                while (backdrops.length > 0) {
-                    backdrops[0].parentNode.removeChild(backdrops[0]);
-                }
-            }
-        }
+      //           // Supprimer le backdrop
+      //           const backdrops = document.getElementsByClassName('modal-backdrop');
+      //           while (backdrops.length > 0) {
+      //               backdrops[0].parentNode.removeChild(backdrops[0]);
+      //           }
+      //       }
+      //   }
  
       function generalHideMessage(server_message = "server-message") {
         document.getElementById(server_message).style.display = 'none';
@@ -781,8 +770,324 @@
           generalHideMessage('server-message-create')
         }, 5000);
       }
+   
+      // ........................................................
+
+    /**
+     * Affiche un modal Bootstrap 5 par son ID avec gestion du focus
+     * @param {string} modalId - L'ID du modal à afficher
+     * @param {string|null} hide_modal_id - ID du modal à cacher avant d'afficher
+     * @returns {boolean} Succès ou échec
+     */
+    function showModalById(modalId, hide_modal_id = null) { 
+        // 1. Cacher le modal précédent avec gestion de focus
+        if (hide_modal_id) {
+            hideModalSafe(hide_modal_id);
+        }
+        
+        // 2. Récupérer l'élément modal
+        const modalElement = document.getElementById(modalId);
+        
+        if (!modalElement) {
+            console.error(`Modal avec l'ID "${modalId}" non trouvé.`);
+            return false;
+        }
+        
+        // 3. Vérifier si Bootstrap est disponible
+        if (typeof bootstrap === 'undefined' || !bootstrap.Modal) {
+            console.error('Bootstrap 5 n\'est pas chargé.');
+            return false;
+        }
+        
+        try {
+            // 4. Nettoyer tout focus résiduel dans le modal
+            const focusedElement = modalElement.querySelector(':focus');
+            if (focusedElement) {
+                focusedElement.blur();
+            }
+            
+            // 5. Sauvegarder l'élément actif avant d'ouvrir
+            modalElement._previousActiveElement = document.activeElement;
+            
+            // 6. Créer/récupérer l'instance Bootstrap
+            let modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (!modalInstance) {
+                modalInstance = new bootstrap.Modal(modalElement, {
+                    focus: true,
+                    keyboard: true
+                });
+            }
+            
+            // 7. Ajouter des écouteurs pour gérer le focus
+            addModalFocusHandlers(modalElement);
+            
+            // 8. Afficher le modal
+            modalInstance.show();
+            
+            return true;
+            
+        } catch (error) {
+            console.error(`Erreur lors de l'affichage du modal "${modalId}":`, error);
+            return false;
+        }
+    }
+
+    /**
+     * Cache un modal de manière sécurisée avec gestion du focus
+     * @param {string} modalId - ID du modal à cacher
+     * @returns {boolean} Succès ou échec
+     */
+    function hideModalSafe(modalId) {
+        const modalElement = document.getElementById(modalId);
+        
+        if (!modalElement) {
+            console.warn(`Modal "${modalId}" non trouvé pour masquage.`);
+            return false;
+        }
+        
+        try {
+            // 1. Enlever tout focus des éléments du modal
+            const focusedElement = modalElement.querySelector(':focus');
+            if (focusedElement) {
+                focusedElement.blur();
+            }
+            
+            // 2. Retirer les attributs ARIA problématiques
+            modalElement.removeAttribute('aria-hidden');
+            
+            // 3. Si Bootstrap est disponible, utiliser sa méthode
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    // Fermer avec gestion interne de Bootstrap
+                    modalInstance.hide();
+                    
+                    // Restaurer le focus après un délai
+                    setTimeout(() => {
+                        restoreFocusAfterModalClose(modalElement);
+                    }, 100);
+                    
+                    return true;
+                }
+            }
+            
+            // 4. Fallback: méthode manuelle sécurisée
+            hideModalManual(modalElement);
+            return true;
+            
+        } catch (error) {
+            console.error(`Erreur lors du masquage du modal "${modalId}":`, error);
+            return false;
+        }
+    }
+
+    /**
+     * Cache un modal manuellement (fallback)
+     * @param {HTMLElement} modalElement - Élément modal
+     */
+    function hideModalManual(modalElement) {
+        // Cacher visuellement
+        modalElement.style.display = 'none';
+        modalElement.classList.remove('show');
+        
+        // Ne pas utiliser aria-hidden pour éviter les conflits
+        // modalElement.removeAttribute('aria-hidden');
+        
+        // Retirer la classe modal-open du body
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = 'auto';
+        document.body.style.paddingRight = '0';
+        
+        // Supprimer le backdrop avec vérification
+        const backdrops = document.querySelectorAll('.modal-backdrop');
+        backdrops.forEach(backdrop => {
+            if (backdrop.parentNode) {
+                backdrop.parentNode.removeChild(backdrop);
+            }
+        });
+        
+        // Restaurer le focus
+        restoreFocusAfterModalClose(modalElement);
+    }
+
+    /**
+     * Ajoute les gestionnaires de focus pour un modal
+     * @param {HTMLElement} modalElement - Élément modal
+     */
+    function addModalFocusHandlers(modalElement) {
+        // Supprimer d'abord les anciens écouteurs
+        removeModalFocusHandlers(modalElement);
+        
+        // Gérer la fermeture
+        modalElement._handleHide = function() {
+            const focused = this.querySelector(':focus');
+            if (focused) {
+                focused.blur();
+            }
+        }.bind(modalElement);
+        
+        modalElement._handleHidden = function() {
+            restoreFocusAfterModalClose(this);
+        }.bind(modalElement);
+        
+        // Ajouter les écouteurs
+        modalElement.addEventListener('hide.bs.modal', modalElement._handleHide);
+        modalElement.addEventListener('hidden.bs.modal', modalElement._handleHidden);
+    }
+
+    /**
+     * Retire les gestionnaires de focus d'un modal
+     * @param {HTMLElement} modalElement - Élément modal
+     */
+    function removeModalFocusHandlers(modalElement) {
+        if (modalElement._handleHide) {
+            modalElement.removeEventListener('hide.bs.modal', modalElement._handleHide);
+        }
+        if (modalElement._handleHidden) {
+            modalElement.removeEventListener('hidden.bs.modal', modalElement._handleHidden);
+        }
+    }
+
+    /**
+     * Restaure le focus après fermeture d'un modal
+     * @param {HTMLElement} modalElement - Élément modal
+     */
+    function restoreFocusAfterModalClose(modalElement) {
+        // Attendre que l'animation se termine
+        setTimeout(() => {
+            // 1. Vérifier si l'élément précédent est toujours valide
+            const previousElement = modalElement._previousActiveElement;
+            const focusCandidates = [
+                previousElement,
+                document.querySelector('[data-modal-focus-default]'),
+                document.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'),
+                document.body
+            ];
+            
+            // 2. Trouver un élément focusable valide
+            for (const candidate of focusCandidates) {
+                if (candidate && 
+                    document.body.contains(candidate) && 
+                    candidate.offsetParent !== null &&
+                    !candidate.disabled &&
+                    candidate.getAttribute('tabindex') !== '-1') {
+                    
+                    try {
+                        candidate.focus({ preventScroll: true });
+                        break;
+                    } catch (e) {
+                        console.warn('Impossible de donner le focus à:', candidate);
+                    }
+                }
+            }
+            
+            // 3. Nettoyer les références
+            delete modalElement._previousActiveElement;
+            
+        }, 50); // Délai pour la fin des animations Bootstrap
+    }
+
+    /**
+     * Version simplifiée maintenue pour compatibilité
+     * @deprecated Utiliser hideModalSafe à la place
+     */
+    function hideModalSimple(modalId) {
+        console.warn('hideModalSimple est dépréciée, utilisez hideModalSafe');
+        return hideModalSafe(modalId);
+    }
+
+    /**
+     * Ferme tous les modals ouverts
+     */
+    function closeAllModals() {
+        // 1. Fermer tous les modals Bootstrap
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            document.querySelectorAll('.modal.show').forEach(modalElement => {
+                const instance = bootstrap.Modal.getInstance(modalElement);
+                if (instance) {
+                    instance.hide();
+                }
+            });
+        }
+        
+        // 2. Nettoyer les modals restants
+        document.querySelectorAll('.modal').forEach(modalElement => {
+            hideModalManual(modalElement);
+        });
+        
+        // 3. Focus sur un élément sûr
+        setTimeout(() => {
+            const focusable = document.querySelector('body');
+            if (focusable) focusable.focus();
+        }, 100);
+    }
+
+    /**
+     * Vérifie si un modal est actuellement ouvert
+     * @param {string} modalId - ID du modal à vérifier
+     * @returns {boolean}
+     */
+    function isModalOpen(modalId) {
+        const modal = document.getElementById(modalId);
+        return modal && modal.classList.contains('show');
+    }
+
+    // messsage de success 
+    function sweetAlertSuccessMessage(message, title = "Success", callback = null) {
+          Swal.fire({
+              title: title,
+              icon: "success",
+              draggable: true,
+              html: `<span class='fs-3 text-success'>${message}</span>`
+          }).then((result) => {
+              if (result.isConfirmed && callback) {
+                  callback();
+              }
+          });
+      }
   
-      showModalById("loginClientModal")    
+	  // messsage d'erreur
+    function sweetAlertDangerMessage(message,title = "Erreur...") {
+      Swal.fire({
+        icon: "error",
+        title:title,
+        html: `<span class='fs-3 text-danger'>${message}</span>`
+      });
+    }
+  
+    // Initialisation globale
+    document.addEventListener('DOMContentLoaded', function() {
+        // Prévenir les problèmes de focus sur les modals
+        document.addEventListener('focusin', function(e) {
+            const target = e.target;
+            const modal = target.closest('.modal');
+            
+            if (modal && !modal.classList.contains('show')) {
+                // Si l'élément est dans un modal caché, enlever le focus
+                setTimeout(() => {
+                    if (target === document.activeElement) {
+                        target.blur();
+                        
+                        // Redonner le focus à un élément sûr
+                        const safeElement = document.querySelector('body');
+                        if (safeElement) safeElement.focus();
+                    }
+                }, 0);
+            }
+        });
+        
+        // Nettoyer tous les modals au chargement
+        document.querySelectorAll('.modal').forEach(modal => {
+            if (!modal.classList.contains('show')) {
+                modal.removeAttribute('aria-hidden');
+            }
+        });
+    });
+
+    //.........................................................
+
+    //showModalById("loginClientModal")   
+
   </script>
 
  
@@ -790,7 +1095,10 @@
     <script>
 
     let url_account = "../app/index.php?action=client/create"; 
+    let url_login = "../app/index.php?action=client/login"; 
+    let url_pagner_add = "../app/index.php?action=panier/ajout_au_panier"; 
     
+    let is_ajout_au_panier_clicked = 0;
     // Fonction principale de connexion
     function createAccount() {
       let form = document.forms.createAccountForm;
@@ -806,11 +1114,11 @@
 
       
       let password2 = document.querySelector("input[name='password2']").value;
-      let password = document.querySelector("input[name='password']").value;
+      let password = document.querySelector("input[name='password1']").value;
       
       if(password2 !== password) { 
           generalShowMessage(
-             "Les deux mots de passe doivent etre identiques", type = 'error',
+             "Les deux mots de passe doivent etre identiques"+password2+" || "+password, type = 'error',
               messageDiv="server-message-create",
               messageText="message-text-create",
               alertDiv=".alert.create"
@@ -826,6 +1134,7 @@
       // Préparation des données à envoyer
       let formData = new FormData(form);  
       formData.append("role","admin");
+      formData.append("password", password2);
 
 
       // Options pour la requête fetch
@@ -853,8 +1162,8 @@
           if (data.success) {
           
               setTimeout(()=>{ 
-                  window.location.href = window.location.href;
-              },4000);
+                  showModalById('loginClientModal','createAccount')
+              },3000);
 
               // Connexion réussie 
               generalShowMessage(
@@ -902,12 +1211,159 @@
           loading_spinner.classList.add("d-none");
           }); 
     }
-    
+
     function ajoutAuPanier(produit_id) { 
       let is_connected = <?= $_IS_CONNECTED ?>; 
-      if(is_connected == 0) {
-        showModalById("authRequired");
+      if(is_connected == 0) { 
+        showModalById("authRequired"); return
       }
+      else{
+        MisEnPanierDuProduit(produit_id);
+      }  
     }
+
+    function loginUser() {
+        let form = document.forms.loginUserForm;
+        let submit_btn = document.getElementById("submit-btn-login");
+        let submit_text = document.getElementById("submit-text-login");
+        let loading_spinner = document.getElementById("loading-spinner-login");
+        
+        // Validation du formulaire
+        if (!form.checkValidity()) {
+          form.classList.add('was-validated');
+          return false;
+        }
+        
+        // Récupération des données
+        let email = form.email.value.trim();
+        let password = form.password.value;
+        
+        // Désactiver le bouton et afficher le spinner
+        submit_btn.disabled = true;
+        submit_text.textContent = "Connexion...";
+        loading_spinner.classList.remove("d-none");
+        
+        // Préparation des données à envoyer
+        let formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', password); 
+        
+        // Options pour la requête fetch
+        const options = {  method: 'POST',  body: formData   };
+        
+        // Envoi de la requête AJAX
+        fetch(url_login, options)
+          .then(response => {
+            // Vérifier le statut HTTP
+            if (!response.ok) {
+              throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            // Traitement de la réponse
+            console.log("Réponse du serveur:", data);
+            
+            if (data.success) {
+              // Connexion réussie 
+              generalShowMessage(
+                data.message+" Vous pouver alors commander les produits ou les ajouter a votre panier" || "Connexion réussie !", type = 'success',
+                messageDiv="server-message-login",
+                messageText="message-text-login",
+                alertDiv=".alert.login"
+              )
+
+              setTimeout(()=>{
+                window.location.href = window.location.href; 
+              },4000)
+              
+            } 
+            else {
+              // Erreur de connexion 
+              generalShowMessage(
+                  data.message || "Email ou mot de passe incorrect", "error",
+                  messageDiv="server-message-login",
+                  messageText="message-text-login",
+                  alertDiv=".alert.login"
+              )
+              // Réactiver le bouton
+              submit_btn.disabled = false;
+              submit_text.textContent = "Se connecter";
+              loading_spinner.classList.add("d-none");
+            }
+          })
+          .catch(error => {
+            // Erreur réseau ou autre
+            console.error("Erreur:", error); 
+             generalShowMessage(
+                 "Erreur de connexion au serveur. Veuillez réessayer", "error",
+                  messageDiv="server-message-login",
+                  messageText="message-text-login",
+                  alertDiv=".alert.login"
+              )
+            // Réactiver le bouton
+            submit_btn.disabled = false;
+            submit_text.textContent = "Se connecter";
+            loading_spinner.classList.add("d-none");
+          }); 
+      }
+     
+    //..produit_id client_id quantite || 
+    function MisEnPanierDuProduit(produit_id) {  
+        let loading_spinner = document.getElementById(`loading_spinner_${produit_id}`);  
+        let submit_btn = document.getElementById(`submit_btn_${produit_id}`);  
+         
+        // Préparation des données à envoyer
+        let formData = new FormData();  
+        formData.append("produit_id", produit_id);
+        formData.append("client_id", <?=$_CLIENT_ID?>);
+        formData.append("quantite", 1);  
+ 
+        // Options pour la requête fetch
+        const options = {  
+            method: 'POST',  
+            body: formData   
+        };
+        
+        loading_spinner.classList.remove("d-none");
+        submit_btn.disabled = true;
+
+        // Envoi de la requête AJAX
+        fetch(url_pagner_add, options)
+        .then(response => {
+        // Vérifier le statut HTTP
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return response.json();
+        })
+        .then(data => {
+          // Traitement de la réponse
+          console.log("Réponse du serveur:", data);
+          
+          if (data.success) {
+          
+             sweetAlertSuccessMessage(data.message || "Produit ajoute au panier avec success", title = "Mis en panier reussi") 
+              // Connexion réussie  
+              loading_spinner.classList.add("d-none"); 
+              submit_btn.disabled = false; 
+          } 
+          else { 
+              // Réactiver le bouton
+              sweetAlertDangerMessage(data.message || "Une erreur est survenu lors de mis en panier du produit",title = "Erreur...")
+              submit_btn.disabled = false; 
+              loading_spinner.classList.add("d-none");
+          }
+        })
+        .catch(error => {
+            // Erreur réseau ou autre
+            console.error("Erreur:", error); 
+            sweetAlertDangerMessage("Erreur de connexion au serveur. Veuillez réessayer",title = "Echec...")
+            // Réactiver le bouton
+            submit_btn.disabled = false; 
+            loading_spinner.classList.add("d-none");
+        });  
+      } 
+  
 
     </script>

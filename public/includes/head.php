@@ -4,11 +4,25 @@
     session_start() ; 
     include_once("../app/controllerCategorie.php");
     include_once("../app/conrollerProduit.php");
+
     $_IS_CONNECTED = (isset($_SESSION['client']) && !empty($_SESSION['client'])) ? 1 : 0;
 
+    $_CLIENT_ID = 0;
+
+    if(isset($_SESSION['client']) && !empty($_SESSION['client'])) {
+      $_CLIENT_ID = $_SESSION['client']["id"];
+    } 
+    
     // Ou détecter automatiquement :
     $base_url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
     define('BASE_URL', $base_url);
+
+    if(isset($_GET["logout"]) && !empty($_GET["logout"])) {
+      session_unset();
+      session_destroy();
+      header("Location:index.php");
+    }
+    
   ?> 
   
   <head>
@@ -47,9 +61,11 @@
 
     <!-- Bootstrap + Theme styles -->
     <link rel="preload" href="assets/css/theme.min.css" as="style">
-    <link rel="preload" href="assets/css/theme.rtl.min.css" as="style">
+    <link rel="stylesheet" href="assets/css/theme.rtl.min.css" as="style">
     <link rel="stylesheet" href="assets/css/theme.min.css" id="theme-styles">
     <link rel="stylesheet" href="assets/css/anime.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Customizer -->
     <script src="assets/js/customizer.min.js"></script>

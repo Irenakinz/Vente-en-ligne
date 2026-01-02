@@ -35,6 +35,24 @@
                     <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
                         <a class="nav-link" href="nos-produits.php">Nos produits</a>
                     </li> 
+
+                    <!-- .............................................. -->
+                <?php 
+                    if(isset($_SESSION['client']) && !empty($_SESSION['client'])) {?>
+                    <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
+                        <a class="nav-link"  href="produits-commandes.php">
+                            <i class="fi-shopping-bag opacity-75 me-2"></i>
+                            Mes commandes 
+                        </a>
+                    </li>
+
+                    <li class="nav-item py-lg-2 me-lg-n2 me-xl-0">
+                        <a class="nav-link" href="produits-en-panier.php">
+                            <i class="fi-shopping-cart opacity-75 me-2"></i>
+                            Mon panier
+                        </a>
+                    </li>  
+                <?php } ?>
                 </ul>
             </div>
         </nav>
@@ -77,17 +95,20 @@
                 </button>
                 </li>
             </ul>
-            </div>
-
-            <!-- Account dropdown (Logged in state) -->
+            </div> 
+        <?php
+            if(isset($_SESSION['client']) && !empty($_SESSION['client'])) {
+        ?>
+        <!-- Account dropdown (Logged in state) -->
             <div class="dropdown pe-1 me-2">
                 <a class="btn btn-icon hover-effect-scale position-relative bg-body-secondary border rounded-circle overflow-hidden" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="My account">
-                    <img src="assets/img/account/avatar-sm.jpg" class="hover-effect-target position-absolute top-0 start-0 w-100 h-100 object-fit-cover" alt="Avatar">
+                    <img src="<?= !empty($_SESSION['client']["photo"]) ? "../medias/".$_SESSION['client']["photo"] : "avatar.jpg"?>"
+                    class="hover-effect-target position-absolute top-0 start-0 w-100 h-100 object-fit-cover" alt="Avatar">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" style="--fn-dropdown-spacer: .5rem">
                     <li class="d-flex flex-column text-center px-3 py-2">
-                        <span class="h6 dropdown-header mb-1">Michael Williams</span>
-                        <span class="text-body-secondary small">chabni@gmail.com</span>
+                        <span class="h6 dropdown-header mb-1"><?=$_SESSION['client']['nom']?> <?=$_SESSION['client']['prenom']?></span>
+                        <span class="text-body-secondary small"><?=$_SESSION['client']['email']?></span>
                     </li>
                     <li><hr class="dropdown-divider my-2"></li> 
                     
@@ -96,6 +117,7 @@
                             <i class="fi-shopping-bag opacity-75 me-2"></i>
                             <span>Mes commandes</span>
                         </a>
+                        
                     </li>
                     <li>
                         <a class="dropdown-item d-flex align-items-center py-2" href="produits-en-panier.php">
@@ -106,13 +128,24 @@
                     <li><hr class="dropdown-divider my-2"></li>
                     
                     <li>
-                        <a class="dropdown-item d-flex align-items-center py-2 text-danger" href="account-signin.html">
+                        <a class="dropdown-item d-flex align-items-center py-2 text-danger" href="?logout=true">
                             <i class="fi-log-out opacity-75 me-2"></i>
                             <span>Se déconnecter</span>
                         </a>
                     </li>
                 </ul>
-            </div> 
+            </div>
+        <?php
+            }else{
+        ?>
+            <div class="">
+                <button class="btn btn-primary" onclick="showModalById('loginClientModal')">Se connecter</button>
+            </div>
+        <?php
+
+            }
+        ?>  
+             
         </div>
       </div>
     </header>
