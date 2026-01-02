@@ -1,6 +1,10 @@
 <!DOCTYPE html><html lang="en" data-bs-theme="light" data-pwa="true">
   
- 
+<?php
+
+$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
+
+?>
   <!-- head de la page -->
  <head>
     <meta charset="utf-8">
@@ -143,6 +147,7 @@
    <script>
 
       let url = "../../app/index.php?action=admin/login";
+      //let url = "<?php echo $base_url; ?>/Vente-en-ligne/app/index.php?action=admin/login";
       
       // Fonction principale de connexion
       function loginUser() {

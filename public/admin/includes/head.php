@@ -1,9 +1,10 @@
 
   <?php 
-  
+
     session_start() ;
     include_once("../../app/conrollerAdmin.php");
     include_once("../../app/controllerCategorie.php");
+    include_once("../../app/conrollerProduit.php");
 
   ?>
 
@@ -58,4 +59,18 @@
     || ($_SESSION['user']['role'] !== "admin" && $_SESSION['user']['role'] !== "root")) 
         header("Location:index.php");
    
+  if(isset($_GET["logout"]) && !empty($_GET["logout"])) {
+    session_unset();
+    session_destroy();
+    header("Location:index.php");
+  }
+
   ?>
+
+<style>
+    .dot-spinner.spine-bouse {
+        --uib-size: 2.0rem;
+        --uib-speed: .9s;
+        --uib-color: #1a27e7ff;
+    }
+</style>

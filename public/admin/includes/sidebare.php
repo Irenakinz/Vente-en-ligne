@@ -59,7 +59,7 @@
                     Journal activités
                 </a>
 
-                <a class="list-group-item list-group-item-action d-flex align-items-center" href="account-signin.html">
+                <a class="list-group-item list-group-item-action d-flex align-items-center" href="?logout=true">
                     <i class="fi-log-out fs-base opacity-75 me-2"></i>
                     Se déconnecter
                 </a>

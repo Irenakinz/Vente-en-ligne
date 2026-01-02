@@ -13,25 +13,16 @@
                 throw new ErrorException("Aucune methode fourni",404);
             }
 
-            switch($action) {
-                case "create" :
-                    if(isProduitValid($data)) return addProduit($data); 
-                    else 
-                        throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire",404); 
-                    break; 
-
+            switch($action) { 
                 case "update": 
                     if(isProduitValid($data) && isset($data["id"]) && !empty($data["id"])) {
-                        $response = updateAdmin($data);
-                        if($response["success"]) {
-                            $_SESSION['user'] = getAdminById($data["id"]);
-                        }
-
+                        $response = updateProduit($data); 
                         return $response;
                     }
                     else 
                         throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire[".implode(array_keys($data)),404); 
                     break;
+
                 case "create":
                     if(isProduitValid($data)) {
                         $response = addAdmin($data); 
@@ -41,16 +32,26 @@
                         throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire",404); 
                     break;
 
-                 case "active_desactive":
-                    if(isset($data["statut"]) && isset($data["id_admin"])) {
-                        $id = intval($data["id_admin"]);
+                case "active_desactive":
+                    if(isset($data["statut"]) && isset($data["id_produit"])) {
+                        $id = intval($data["id_produit"]);
                         $statut = intval($data["statut"]);
-                        $response = disableAdmin($id, $statut); 
+                        $response = activeDesactiveProduit($id, $statut); 
                         return $response; 
                     }
                     else 
-                        throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire",404); 
-                    break;
+                        throw new ErrorException("Une erreur est survenu",500); 
+                        break;
+                    
+                case "getById":
+                    if(isset($data["produit_id"]) && !empty($data["produit_id"])) {
+                        $id = intval($data["produit_id"]); 
+                        $response = getProduits($id); 
+                        return $response; 
+                    }
+                    else 
+                        throw new ErrorException("Une erreur est survenu",500); 
+
                 default :;
             } 
         }
@@ -74,9 +75,13 @@
         return false;
     }
 
-    // function getAdmin($id=null) {
-    //     if($id) return getAdminById($id);
-    //     else return getAdmins();
-    // }
+    function getProduits($id=null,$is_admin=false) {
+        if($id) return getProduitById($id);
+        else return getAllProduit($is_admin);
+    }
+
+    function getLastProduit() {
+        return getLastSavedProduit();
+    }
 
 ?>

@@ -76,6 +76,7 @@
                                         $title = ""; 
                                         $disabled = "";
                                         $border = "";
+                                        $is_user_disabled = "";
 
                                         if($admin["role"] == "root") {
                                             $message = "Protégé";
@@ -96,18 +97,19 @@
                                                 $classe = "btn-sm btn-success";
                                                 $title = "Activer l'administrateur";
                                                 $disabled = "";
+                                                $is_user_disabled = "bg-body-tertiary";
                                             } 
                                         }
                             ?>
-                                    <tr>
-                                        <td class="ps-4 fw-semibold"><?=$n+1?></td>
-                                        <td>
+                                    <tr class="">
+                                        <td class="ps-4 fw-semibold <?=$is_user_disabled?>"><?=$n+1?></td>
+                                        <td class="<?=$is_user_disabled?>">
                                             <img src="<?=!empty($admin["photo"]) ? "../../medias/".$admin["photo"] : "avatar.jpg"?>" 
                                                 alt="Admin" 
                                                 class="rounded-circle border <?=$border?>" 
                                                 style="width: 50px; height: 50px; object-fit: cover;">
                                         </td>
-                                        <td>
+                                        <td class="<?=$is_user_disabled?>">
                                             <h6 class="mb-1"><?=$admin["nom"]." ".$admin["prenom"]?></h6>
                                             <p class="text-muted small mb-0">
                                                 <i class="fi-mail opacity-75 me-1"></i><?=$admin["email"]?>
@@ -116,18 +118,18 @@
                                                 <i class="fi-shield opacity-75 me-1"></i><?=$admin["role"] === "root" ? "Super Administrateur" : "Administrateur"?>
                                             </p>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center <?=$is_user_disabled?>">
                                             <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
                                                 <?=$admin["role"] === "root" ? "Super Admin" : "Admin"?>
                                             </span>
                                         </td> 
 
-                                        <td class="text-center">
-                                            <span class="badge <?=$admin["genre"] == "homme" ? "bg-primary bg-opacity-10 text-primary" : "bg-warning bg-opacity-10 text-warning"?> border border-primary border-opacity-25">
+                                        <td class="text-center <?=$is_user_disabled?>">
+                                            <span class="badge  <?=$admin["genre"] == "homme" ? "bg-primary bg-opacity-10 text-primary" : "bg-warning bg-opacity-10 text-warning"?> border border-primary border-opacity-25">
                                                 <i class="fi-user me-1"></i><?=$admin["genre"]?>
                                             </span>
                                         </td>
-                                        <td class="pe-4">
+                                        <td class="pe-4 <?=$is_user_disabled?>">
                                             <div class="d-flex justify-content-center gap-2">
                                                 <button class="btn btn-sm <?=$classe?> " <?=$disabled?> title="<?=$title?>" 
                                                 id="submit_btn<?=$admin["id"]?>"
@@ -443,7 +445,7 @@
             
                 setTimeout(()=>{ 
                     window.location.href = window.location.href;
-                },5000);
+                },4000);
 
                 // Connexion réussie
                 showMessage(data.message || "Enregistrement réussie !", "success", ".alert.create");
@@ -519,7 +521,7 @@
         
             setTimeout(()=>{ 
                 window.location.href = window.location.href;
-            },5000);
+            },3000);
 
             // Connexion réussie
             generalShowMessage(data.message, type = 'success',

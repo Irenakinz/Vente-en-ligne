@@ -206,7 +206,7 @@
     // Atributs : Id Nom Prénom Email Password  Adresse Photo Genre
     function addClient($client)
     {
-        $sql = "INSERT INTO client (nom, prenom, email, password, adresse, photo, genre)
+        $sql = "INSERT INTO clients (nom, prenom, email, password, adresse, photo, genre)
                 VALUES (:nom, :prenom, :email, :password, :adresse, :photo, :genre)";
 
         try {
@@ -239,7 +239,7 @@
 
 
     function updateClient($client){
-        $sql = "UPDATE client 
+        $sql = "UPDATE clients 
                 SET nom=:nom, prenom=:prenom, email=:email, adresse=:adresse, 
                     photo=:photo, genre=:genre
                 WHERE id=:id LIMIT 1";
@@ -277,7 +277,7 @@
 
     function getClients()
     {
-        $sql = "SELECT * FROM client ORDER BY id DESC";
+        $sql = "SELECT * FROM clients ORDER BY id DESC";
 
         try {
             $pdo = getConnection();
@@ -298,7 +298,7 @@
     function getClientByCommande($commande_id)
     {
         $sql = "SELECT c.* 
-                FROM client c
+                FROM clients c
                 INNER JOIN commandes cmd ON c.id = cmd.client_id
                 WHERE cmd.id = :commande_id";
 
@@ -322,7 +322,7 @@
 
     function getClientById($id)
     {
-        $sql = "SELECT * FROM client WHERE id = :id LIMIT 1";
+        $sql = "SELECT * FROM clients WHERE id = :id LIMIT 1";
 
         try {
             $pdo = getConnection();
@@ -347,7 +347,7 @@
         try {
             $pdo = getConnection();
 
-            $sql = "UPDATE client SET statut = 0 WHERE id = :id";
+            $sql = "UPDATE clients SET statut = 0 WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':id' => $id]);
 
@@ -422,6 +422,7 @@
     // GESTION DES PRODUITS
     // Atributs : id titre description id_catégorie quantité Prix unitaire image représentatif statut
 
+    //ok
     function addProduit($produit)
     {
         $sql = "INSERT INTO produits
@@ -454,6 +455,7 @@
         }
     }
 
+    //ok
     function updateProduit($produit)
     {
         $sql = "UPDATE produits SET  titre=:titre,  description=:description,
@@ -465,14 +467,18 @@
             $pdo = getConnection();
 
             $image = $produit['photo'];
+            $image_update = $produit['image_update'];
 
-            if (is_array($image)) {
+            if (is_array($image) && isset($image["tmp_name"]) && !empty($image["tmp_name"])) {
                 $image = uploadFile($image);
+                if (!$image) {
+                    return getResponse("Erreur lors de l'upload de l'image", 400, false);
+                }
+            } else{
+                $image = $image_update;
             }
 
-            if (!$image) {
-                return getResponse("Erreur lors de l'upload de l'image", 400, false);
-            }
+            
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
@@ -492,11 +498,12 @@
         }
     }
 
-    function getAllProduit()
+    //ok
+    function getAllProduit($is_admin = false)
     {
-        $sql = "SELECT p.*, c.description AS categorie
+        $sql = "SELECT p.*, c.description AS categorie, c.icone icone
                 FROM produits p
-                INNER JOIN categorie c ON p.categorie_id = c.id
+                INNER JOIN categorie c ON p.categorie_id = c.id".($is_admin == false ? " AND p.statut = 1":"")."
                 ORDER BY p.id DESC";
 
         try {
@@ -508,13 +515,15 @@
                 return getResponse("Aucun produit trouvé", 404, false);
             }
 
-            return $produits;
+            return getResponse("Liste des produits", 404, true,$produits);
+            
 
         } catch (Exception $e) {
             throw $e;
         }
     }
 
+    //ok
     function getProduitById($id)
     {
         $sql = "SELECT * FROM produits WHERE id = :id LIMIT 1";
@@ -529,19 +538,22 @@
             if (!$produit) {
                 return getResponse("Produit introuvable", 404, false);
             }
-
-            return $produit;
+ 
+            return getResponse("details du produits", 200, true,$produit);
 
         } catch (Exception $e) {
             throw $e;
         }
     }
 
-    function getProduitByCategorie($categorie_id)
+    function getProduitByCategorie($categorie_id,$is_admin = false)
     {
-        $sql = "SELECT * FROM produits 
-                WHERE categorie_id = :categorie_id AND statut = 1
+        $sql = "SELECT p.*, c.description AS categorie, c.icone icone
+                FROM produits p
+                INNER JOIN categorie c ON p.categorie_id = c.id 
+                WHERE categorie_id = :categorie_id ".($is_admin == false ? " AND p.statut = 1":"")."
                 ORDER BY id DESC";
+        
 
         try {
             $pdo = getConnection();
@@ -554,13 +566,15 @@
                 return getResponse("Aucun produit trouvé pour cette catégorie", 404, false);
             }
 
-            return $produits;
+            
+            return getResponse("liste des produits", 200, true,$produits);
 
         } catch (Exception $e) {
             throw $e;
         }
     }
 
+    //ok
     function activeDesactiveProduit($id, $statut = 0)
     {
         try {
@@ -578,6 +592,29 @@
                 200,
                 true
             );
+
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    function getLastSavedProduit() {
+         $sql = "SELECT p.*, c.description AS categorie, c.icone icone
+                FROM produits p
+                INNER JOIN categorie c ON p.categorie_id = c.id WHERE p.statut = 1
+                ORDER BY p.id DESC LIMIT 6";
+
+        try {
+            $pdo = getConnection();
+            $stmt = $pdo->query($sql);
+            $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!$produits) {
+                return getResponse("Aucun produit trouvé", 404, false);
+            }
+
+            return getResponse("Liste des produits", 404, true,$produits);
+            
 
         } catch (Exception $e) {
             throw $e;

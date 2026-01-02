@@ -1,4 +1,17 @@
-<head>
+  
+  <?php 
+
+    session_start() ; 
+    include_once("../app/controllerCategorie.php");
+    include_once("../app/conrollerProduit.php");
+    $_IS_CONNECTED = (isset($_SESSION['client']) && !empty($_SESSION['client'])) ? 1 : 0;
+
+    // Ou détecter automatiquement :
+    $base_url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+    define('BASE_URL', $base_url);
+  ?> 
+  
+  <head>
     <meta charset="utf-8">
 
     <!-- Viewport -->
@@ -16,6 +29,7 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/png" href="assets/app-icons/icon-32x32.png" sizes="32x32">
     <link rel="apple-touch-icon" href="assets/app-icons/icon-180x180.png">
+    <link rel="stylesheet" href="assets/css/anime.css">
 
     <!-- Theme switcher (color modes) -->
     <script src="assets/js/theme-switcher.js"></script>
@@ -40,3 +54,39 @@
     <!-- Customizer -->
     <script src="assets/js/customizer.min.js"></script>
   </head>
+
+
+
+<?php
+ 
+function formatDateFrancais($dateString) {
+    // Vérifier si la date est valide
+    if (empty($dateString) || strtotime($dateString) === false) {
+        return "Date invalide";
+    }
+    
+    // Essayer setlocale d'abord
+    setlocale(LC_TIME, 'fr_FR.UTF-8', 'fr_FR', 'fr', 'French_France.1252');
+    $dateFormatee = strftime("%d %B %Y", strtotime($dateString));
+    
+    // Fallback si setlocale ne fonctionne pas
+    if (empty($dateFormatee) || strpos($dateFormatee, '%') !== false) {
+        $mois_fr = [
+            1 => "janvier", 2 => "février", 3 => "mars", 4 => "avril",
+            5 => "mai", 6 => "juin", 7 => "juillet", 8 => "août",
+            9 => "septembre", 10 => "octobre", 11 => "novembre", 12 => "décembre"
+        ];
+        
+        $timestamp = strtotime($dateString);
+        $jour = date("d", $timestamp);
+        $mois = $mois_fr[date("n", $timestamp)];
+        $annee = date("Y", $timestamp);
+        
+        $dateFormatee = $jour . " " . $mois . " " . $annee;
+    }
+    
+    return $dateFormatee;
+}
+ 
+
+?>

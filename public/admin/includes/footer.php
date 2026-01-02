@@ -129,4 +129,36 @@
           }
       }
 
+      /**
+   * Affiche un modal Bootstrap 5 par son ID
+   * @param {string} modalId - L'ID du modal à afficher
+   */
+  function showModalById(modalId) {
+      // Récupérer l'élément modal
+      const modalElement = document.getElementById(modalId);
+      
+      if (!modalElement) {
+          console.error(`Modal avec l'ID "${modalId}" non trouvé.`);
+          return false;
+      }
+      
+      // Vérifier si Bootstrap est disponible
+      if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+          // Créer une instance du modal ou récupérer l'existante
+          let modal = bootstrap.Modal.getInstance(modalElement);
+          
+          if (!modal) {
+              // Créer une nouvelle instance
+              modal = new bootstrap.Modal(modalElement);
+          }
+          
+          // Afficher le modal
+          modal.show();
+          return true;
+      } else {
+          console.error('Bootstrap 5 n\'est pas chargé.');
+          return false;
+      }
+  }
+    
     </script>

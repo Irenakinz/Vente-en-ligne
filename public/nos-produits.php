@@ -85,487 +85,73 @@
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
 
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/tools/drill.jpg" alt="Perceuse visseuse sans fil">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-primary-subtle text-decoration-none mb-2">Outillage électrique</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Perceuse-Visseuse 18V</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Perceuse-visseuse sans fil professionnelle avec 2 batteries lithium-ion et couple max 60 Nm.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.6</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(243)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">89,90€</div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
+                <?php
+
+                    $ResponseProduit = getProduits();
+                    if($ResponseProduit["success"]) {
+                      $lastProduits = $ResponseProduit["data"];
+                      foreach($lastProduits as $produit) {
+                ?>
+                      <!-- Produit 1 -->
+                      <div class="swiper-slide h-auto">
+                        <article class="card h-100 hover-effect-scale">
+                          <div class="card-img-top position-relative overflow-hidden"> 
+                            <div class="" style="width:auto;">
+                              <img src="../medias/<?=$produit["image"]?>" alt="Kit d'outils multifonctions" style="width:100%;height:230px;object-fit:cover">
+                            </div>
+                          </div>
+                          <div class="card-body pb-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                              <div class="fs-xs text-body-secondary me-3"><?=formatDateFrancais($produit["date_save"])?></div>
+                              <div class="d-flex gap-2 position-relative z-2">
+                                <!-- <button type="button" class="btn btn-icon btn-sm btn-outline-secondary animate-pulse rounded-circle" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-sm" title="Ajouter aux favoris" aria-label="Ajouter aux favoris">
+                                  <i class="fi-heart animate-target fs-sm"></i>
+                                </button>
+                                <button type="button" class="btn btn-icon btn-sm btn-outline-secondary animate-shake rounded-circle" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-sm" title="Alerte prix" aria-label="Alerte prix">
+                                  <i class="fi-bell animate-target fs-sm"></i>
+                                </button> -->
+                              </div>
+                            </div>
+                            <h3 class="h6 mb-2">
+                              <span class="hover-effect-underline stretched-link me-1" href="#!"><?=$produit["titre"]?></span>
+                              <!-- <span class="fs-xs fw-normal text-body-secondary">32 pièces</span> -->
+                            </h3>
+                            <p class="text-body-secondary fs-xs mb-2"><?=$produit["description"]?></p>
+                            <div class="d-flex align-items-center mt-auto justify-content-between">
+                              <div class="h6 text-primary mb-0"> 
+                                <?=$produit["prix_unitaire"]?>Fb
+                              </div>
+                              <button type="button" style="cursor: pointer; position: relative; z-index: 10;" class="btn btn-primary btn-sm d-flex gap-1" onclick="ajoutAuPanier(<?=$produit['id']?>)">
+                                <i class="fi-shopping-cart"></i>Ajouter
+                              </button>
+                            </div>
+                          </div>
+                          <div class="card-footer bg-transparent border-0 pt-0 pb-a">
+                            <div class="border-top pt-2">
+                              <div class="row row-cols-2 g-2 fs-xs">
+                                <div class="col d-flex align-items-center gap-1"> 
+                                  <?=$produit["icone"]?>
+                                  <?=$produit["categorie"]?>
+                                </div> 
+                                <div class="col d-flex align-items-center gap-1">
+                                  <i class="fi-box"></i>
+                                  En stock
+                                </div> 
+                              </div>
+                            </div>
+                          </div>
+                        </article>
+                      </div> 
+
+ 
+                <?php
+                      }
+                    }
+
+                ?>
 
               <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/paint/bucket.jpg" alt="Peinture murale">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-warning-subtle text-decoration-none mb-2">Peinture</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Peinture Murale Mate 2.5L</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Peinture acrylique mate pour intérieur, lavable, couvrance exceptionnelle.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.5</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(87)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">
-                        <span class="text-decoration-line-through text-body-secondary fs-xs me-1">29,90€</span>
-                        24,90€
-                      </div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/garden/kit.jpg" alt="Kit jardinage">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-success-subtle text-decoration-none mb-2">Jardinage</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Kit Jardinage 5 Pièces</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Kit complet avec pelle, râteau, transplantoir, serfouette et griffe. Manches ergonomiques.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.9</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(203)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">45,50€</div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/security/lock.jpg" alt="Serrure connectée">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-info-subtle text-decoration-none mb-2">Sécurité</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Serrure Connectée Bluetooth</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Serrure connectée avec application mobile, empreinte digitale et code numérique.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.6</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(156)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">89,90€</div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/measure/laser.jpg" alt="Télémètre laser">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-secondary-subtle text-decoration-none mb-2">Mesure</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Télémètre Laser 100m</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Télémètre laser haute précision avec calcul automatique de surface et volume.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.9</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(189)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">149,90€</div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/tools/saw.jpg" alt="Scie circulaire">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-primary-subtle text-decoration-none mb-2">Outillage électrique</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Scie Circulaire 2000W</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Scie circulaire professionnelle avec guide laser et coupe à 45°. Puissance 2000W.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.8</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(127)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">Stock limité</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">129,90€</div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/paint/roller.jpg" alt="Rouleau à peinture">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-warning-subtle text-decoration-none mb-2">Peinture</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Kit Peinture Professionnel</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Kit complet avec rouleaux, bacs et accessoires pour peinture professionnelle.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.4</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(98)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">34,90€</div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/garden/watering.jpg" alt="Système d'arrosage">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-success-subtle text-decoration-none mb-2">Jardinage</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Système d'Arrosage Automatique</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Kit d'arrosage automatique avec programmateur et 20 arroseurs pour jardin.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.5</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(142)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">
-                        <span class="text-decoration-line-through text-body-secondary fs-xs me-1">79,90€</span>
-                        64,90€
-                      </div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/tools/welder.jpg" alt="Poste à souder">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-danger-subtle text-decoration-none mb-2">Soudure</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Poste à Souder Inverter 200A</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Poste à souder inverter professionnel pour soudure à l'arc et TIG.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.7</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(89)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">349,90€</div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/security/alarm.jpg" alt="Alarme maison">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-info-subtle text-decoration-none mb-2">Sécurité</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Kit Alarme Maison Sans Fil</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Kit alarme maison complet avec centrale, détecteurs et sirène. Installation facile.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.8</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(203)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">189,90€</div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
-                  <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
-                    <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
-                      <img src="assets/img/products/measure/level.jpg" alt="Niveau laser">
-                    </div>
-                    <div class="position-absolute top-0 end-0 z-2 hover-effect-target opacity-0 pt-1 pt-sm-0 pe-1 pe-sm-0 mt-2 mt-sm-3 me-2 me-sm-3">
-                      <button type="button" class="btn btn-sm btn-icon btn-light bg-light border-0 rounded-circle animate-pulse" aria-label="Ajouter aux favoris">
-                        <i class="fi-heart animate-target fs-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body pt-3 pb-2 px-3">
-                    <span class="badge text-body-emphasis bg-secondary-subtle text-decoration-none mb-2">Mesure</span>
-                    <h3 class="h5 pt-1 mb-2">
-                      <a class="hover-effect-underline stretched-link" href="single-product.html">Niveau Laser 3 Points</a>
-                    </h3>
-                    <p class="fs-sm mb-0">Niveau laser professionnel avec projection de points verticaux et horizontaux.</p>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="d-flex align-items-center gap-1">
-                        <i class="fi-star-filled text-warning"></i>
-                        <span class="fs-sm text-secondary-emphasis">4.6</span>
-                        <span class="fs-xs text-body-secondary align-self-end">(112)</span>
-                      </div>
-                      <div class="d-flex align-items-center gap-1 min-w-0 fs-sm">
-                        <i class="fi-box"></i>
-                        <span class="text-truncate">En stock</span>
-                      </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between pt-3">
-                      <div class="h6 text-primary mb-0">79,90€</div>
-                      <button type="button" class="btn btn-primary btn-sm">
-                        <i class="fi-shopping-cart me-1"></i>
-                        Ajouter
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit -->
-              <div class="col">
+              <!-- <div class="col">
                 <article class="card h-100 hover-effect-scale hover-effect-opacity bg-transparent">
                   <div class="card-img-top position-relative bg-body-tertiary overflow-hidden">
                     <div class="ratio hover-effect-target" style="--fn-aspect-ratio: calc(198 / 304 * 100%)">
@@ -605,7 +191,7 @@
                     </div>
                   </div>
                 </article>
-              </div>
+              </div> -->
             </div>
 
             <!-- Pagination -->

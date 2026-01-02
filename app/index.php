@@ -4,8 +4,8 @@
 
     session_start();
 
-
     include_once("conrollerAdmin.php");
+    include_once("conrollerClient.php");
     include_once("conrollerProduit.php");
 
     set_exception_handler(function($e){
@@ -37,8 +37,13 @@
         case "admin" : 
             $return = adminController($action, $data);
             echo json_encode($return); break;
+
         case "produit" : 
             $return = produitController($action, $data);
+            echo json_encode($return); break;
+
+        case "client" : 
+            $return = clientController($action, $data);
             echo json_encode($return); break;
     }
 
