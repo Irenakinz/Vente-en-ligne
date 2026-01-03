@@ -5,9 +5,10 @@
     include_once("../../app/conrollerAdmin.php");
     include_once("../../app/controllerCategorie.php");
     include_once("../../app/conrollerProduit.php");
+    include_once("../../app/conrollerProduit.php");
+    include_once("../../app/conrollerClient.php");
 
-  ?>
-
+  ?> 
   <head>
     <meta charset="utf-8">
 
@@ -65,6 +66,10 @@
     header("Location:index.php");
   }
 
+   // Ou détecter automatiquement :
+    $base_url = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+    define('BASE_URL', $base_url);
+    
   ?>
 
 <style>

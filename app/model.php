@@ -208,7 +208,7 @@
     //||||||| ...........................................................
 
     // GESTION DES CLIENTS
-    // Atributs : Id Nom Prénom Email Password  Adresse Photo Genre
+    // Atributs : id nom prenom Email password  adresse photo genre
     function addClient($client)
     {
         $sql = "INSERT INTO clients (nom, prenom, email, password, adresse, photo, genre)
@@ -293,7 +293,8 @@
                 return getResponse("Aucun client trouvé", 404, false);
             }
 
-            return $clients;
+            
+            return getResponse("Aucun client trouvé", 404, true, $clients);
 
         } catch (Exception $e) {
             throw $e;
@@ -1396,7 +1397,7 @@
         }
     }
  
-//    $data = getClientStats(1);
-//    print_r($data);
+    // $data = getClients();
+    // print_r($data);
 ?> 
 

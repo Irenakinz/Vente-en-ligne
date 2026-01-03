@@ -85,9 +85,8 @@
         return false;
     }
 
-    // function getAdmin($id=null) {
-    //     if($id) return getAdminById($id);
-    //     else return getAdmins();
-    // }
+    function listAllClient() { 
+        return getClients();
+    }
 
 ?>

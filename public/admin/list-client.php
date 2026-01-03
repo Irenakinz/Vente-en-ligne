@@ -44,201 +44,126 @@
                                 <th class="ps-4" style="width: 60px;">#</th>
                                 <th style="width: 80px;">Photo</th>
                                 <th>Informations</th>
-                                <th style="width: 180px;">Adresse</th>
-                                <th style="width: 100px;" class="text-center">Genre</th>
-                                <th style="width: 180px;" class="text-center pe-4">Actions</th>
+                                <th style="width:">Adresse</th>
+                                <th style="width: 100px;" class="text-center">Genre</th> 
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Client 1 - Actif -->
+                   <!-- ////////////////////////////////////// -->
+                    <?php
+                        $responseClient = listAllClient();
+                        if($responseClient["success"] && !empty($responseClient["data"])) {
+                            $counter = 1;
+                            foreach($responseClient["data"] as $client):
+                                // Déterminer le statut et les classes CSS
+                                $isActive = ($client['statut'] == 1);
+                                $rowClass = $isActive ? '' : 'table-secondary opacity-75';
+                                $textClass = $isActive ? '' : 'text-muted';
+                                $imgClass = $isActive ? '' : 'opacity-50';
+                                
+                                // Format du nom complet
+                                $nomComplet = trim($client['prenom'] . ' ' . $client['nom']);
+                                
+                                // Format du genre
+                                $genreBadgeClass = '';
+                                $genreBadgeIcon = 'fi-user';
+                                $genreBadgeText = 'Non spécifié';
+                                
+                                if ($client['genre'] == 'homme' || $client['genre'] == 'Homme') {
+                                    $genreBadgeClass = 'bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25';
+                                    $genreBadgeIcon = 'fi-male';
+                                    $genreBadgeText = 'Homme';
+                                } elseif ($client['genre'] == 'femme' || $client['genre'] == 'Femme') {
+                                    $genreBadgeClass = 'bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25';
+                                    $genreBadgeIcon = 'fi-female';
+                                    $genreBadgeText = 'Femme';
+                                } elseif (!empty($client['genre'])) {
+                                    $genreBadgeClass = 'bg-info bg-opacity-10 text-info border border-info border-opacity-25';
+                                    $genreBadgeText = htmlspecialchars($client['genre']);
+                                }
+                                
+                                // Photo du client (image par défaut si non définie)
+                                $photoUrl = !empty($client['photo']) ? 
+                                        (BASE_URL . '/Vente-en-ligne/medias/' . $client['photo']) : 
+                                        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop';
+                                
+                                // Date formatée
+                                $dateInscription = !empty($client['date_save']) ? date('d/m/Y', strtotime($client['date_save'])) : 'Date inconnue';
+                        ?>
+                            <!-- Client -->
+                            <tr class="<?= $rowClass ?>">
+                                <td class="ps-4 fw-semibold <?= $textClass ?>"><?= $counter++ ?></td>
+                                <td>
+                                    <img src="<?= $photoUrl ?>" 
+                                        alt="<?= htmlspecialchars($nomComplet) ?>" 
+                                        class="rounded-circle <?= $imgClass ?>" 
+                                        style="width: 50px; height: 50px; object-fit: cover;">
+                                </td>
+                                <td>
+                                    <h6 class="mb-1 <?= $textClass ?>"><?= htmlspecialchars($nomComplet) ?></h6>
+                                    <p class="small mb-0 <?= $textClass ?>">
+                                        <i class="fi-mail opacity-75 me-1"></i><?= htmlspecialchars($client['email']) ?>
+                                    </p>
+                                </td>
+                                
+                                <td class="pe-4 <?= $textClass ?>">
+                                    <!-- Adresse -->
+                                    <?php if(!empty($client['adresse'])): ?>
+                                    <p class="small mb-2">
+                                        <i class="fi-map-pin opacity-75 me-1"></i>
+                                        <?= nl2br(htmlspecialchars($client['adresse'])) ?>
+                                    </p>
+                                    <?php else: ?>
+                                    <p class="small mb-2 text-muted">
+                                        <i class="fi-map-pin opacity-75 me-1"></i>
+                                        Aucune adresse
+                                    </p>
+                                    <?php endif; ?>
+                                    
+                                    <!-- Date d'inscription -->
+                                    <p class="small mb-0">
+                                        <i class="fi-calendar opacity-75 me-1"></i>
+                                        Inscrit le <?= $dateInscription ?>
+                                    </p>
+                                </td>
+                                <td class="text-center">
+                                    <!-- Badge genre -->
+                                    <span class="badge <?= $genreBadgeClass ?> mb-2">
+                                        <i class="<?= $genreBadgeIcon ?> me-1"></i><?= $genreBadgeText ?>
+                                    </span>
+                                    
+                                    <!-- Badge statut -->
+                                    <?php if($isActive): ?>
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                        <i class="fi-check-circle me-1"></i>Actif
+                                    </span>
+                                    <?php else: ?>
+                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
+                                        <i class="fi-x-circle me-1"></i>Inactif
+                                    </span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php 
+                            endforeach; 
+                        } else {
+                            // Aucun client trouvé
+                        ?>
                             <tr>
-                                <td class="ps-4 fw-semibold">1</td>
-                                <td>
-                                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop" 
-                                        alt="Jean Dupont" 
-                                        class="rounded-circle" 
-                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                </td>
-                                <td>
-                                    <h6 class="mb-1">Jean Dupont</h6>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-mail opacity-75 me-1"></i>jean.dupont@email.com
-                                    </p>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-phone opacity-75 me-1"></i>+33 6 12 34 56 78
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="small mb-0">15 Rue de la République<br>75001 Paris, France</p>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
-                                        <i class="fi-user me-1"></i>Homme
-                                    </span>
-                                </td>
-                                <td class="pe-4">
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button class="btn btn-sm btn-outline-info" title="Voir détails">
-                                            <i class="fi-eye me-1"></i>Détails
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Désactiver le compte">
-                                            <i class="fi-power me-1"></i>Désactiver
-                                        </button>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="display-1 text-muted mb-4">
+                                        <i class="fi-users"></i>
                                     </div>
+                                    <h4 class="text-muted mb-3">Aucun client trouvé</h4>
+                                    <p class="text-muted mb-4">
+                                        Aucun client n'est inscrit pour le moment.
+                                    </p>
                                 </td>
                             </tr>
-
-                            <!-- Client 2 - Désactivé -->
-                            <tr class="table-secondary opacity-75">
-                                <td class="ps-4 fw-semibold">2</td>
-                                <td>
-                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" 
-                                        alt="Marie Leroy" 
-                                        class="rounded-circle opacity-50" 
-                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                </td>
-                                <td>
-                                    <h6 class="mb-1 text-muted">Marie Leroy</h6>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-mail opacity-75 me-1"></i>marie.leroy@email.com
-                                    </p>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-phone opacity-75 me-1"></i>+33 6 23 45 67 89
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="small mb-0 text-muted">8 Avenue des Champs-Élysées<br>75008 Paris, France</p>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-secondary bg-opacity-25 text-secondary">
-                                        <i class="fi-user me-1"></i>Femme
-                                    </span>
-                                </td>
-                                <td class="pe-4">
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button class="btn btn-sm btn-outline-secondary" title="Voir détails">
-                                            <i class="fi-eye me-1"></i>Détails
-                                        </button>
-                                        <button class="btn btn-sm btn-success" title="Activer le compte">
-                                            <i class="fi-check me-1"></i>Activer
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Client 3 - Actif -->
-                            <tr>
-                                <td class="ps-4 fw-semibold">3</td>
-                                <td>
-                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" 
-                                        alt="Thomas Martin" 
-                                        class="rounded-circle" 
-                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                </td>
-                                <td>
-                                    <h6 class="mb-1">Thomas Martin</h6>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-mail opacity-75 me-1"></i>thomas.martin@email.com
-                                    </p>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-phone opacity-75 me-1"></i>+33 6 34 56 78 90
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="small mb-0">22 Rue du Commerce<br>69002 Lyon, France</p>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
-                                        <i class="fi-user me-1"></i>Homme
-                                    </span>
-                                </td>
-                                <td class="pe-4">
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button class="btn btn-sm btn-outline-info" title="Voir détails">
-                                            <i class="fi-eye me-1"></i>Détails
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Désactiver le compte">
-                                            <i class="fi-power me-1"></i>Désactiver
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Client 4 - Actif -->
-                            <tr>
-                                <td class="ps-4 fw-semibold">4</td>
-                                <td>
-                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" 
-                                        alt="Sophie Petit" 
-                                        class="rounded-circle" 
-                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                </td>
-                                <td>
-                                    <h6 class="mb-1">Sophie Petit</h6>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-mail opacity-75 me-1"></i>sophie.petit@email.com
-                                    </p>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-phone opacity-75 me-1"></i>+33 6 45 67 89 01
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="small mb-0">5 Place Bellecour<br>69002 Lyon, France</p>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
-                                        <i class="fi-user me-1"></i>Femme
-                                    </span>
-                                </td>
-                                <td class="pe-4">
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button class="btn btn-sm btn-outline-info" title="Voir détails">
-                                            <i class="fi-eye me-1"></i>Détails
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Désactiver le compte">
-                                            <i class="fi-power me-1"></i>Désactiver
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Client 5 - Actif -->
-                            <tr>
-                                <td class="ps-4 fw-semibold">5</td>
-                                <td>
-                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" 
-                                        alt="Pierre Dubois" 
-                                        class="rounded-circle" 
-                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                </td>
-                                <td>
-                                    <h6 class="mb-1">Pierre Dubois</h6>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-mail opacity-75 me-1"></i>pierre.dubois@email.com
-                                    </p>
-                                    <p class="text-muted small mb-0">
-                                        <i class="fi-phone opacity-75 me-1"></i>+33 6 56 78 90 12
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="small mb-0">18 Cours Mirabeau<br>13100 Aix-en-Provence, France</p>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
-                                        <i class="fi-user me-1"></i>Homme
-                                    </span>
-                                </td>
-                                <td class="pe-4">
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button class="btn btn-sm btn-outline-info" title="Voir détails">
-                                            <i class="fi-eye me-1"></i>Détails
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Désactiver le compte">
-                                            <i class="fi-power me-1"></i>Désactiver
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                        <?php
+                        }
+                        ?>
+                   <!-- //////////////////////////////////////////// -->
                         </tbody>
                     </table>
 
