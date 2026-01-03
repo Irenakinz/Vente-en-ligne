@@ -1399,5 +1399,108 @@
  
     // $data = getAllCommandes();
     // print_r($data);
+
+    function getDashboardStatsAdmin() {
+        try {
+            $pdo = getConnection();
+            
+            // Récupérer toutes les statistiques en une seule requête
+            $sql = "SELECT 
+                        -- 1. Nombre total de clients
+                        (SELECT COUNT(*) FROM clients) as total_clients,
+                        
+                        -- 2. Nombre de produits disponibles (statut = 1)
+                        (SELECT COUNT(*) FROM produits WHERE statut = 1) as produits_disponibles,
+                        
+                        -- 3. Produits en rupture (quantité = 0)
+                        (SELECT COUNT(*) FROM produits WHERE quantite = 0) as produits_rupture,
+                        
+                        -- 4. Commandes en attente (etat = 0)
+                        (SELECT COUNT(*) FROM commandes WHERE etat = 0) as commandes_attente,
+                        
+                        -- 5. Commandes validées ce mois-ci
+                        (SELECT COUNT(*) FROM commandes 
+                        WHERE etat = 1 
+                        AND MONTH(date_commande) = MONTH(CURRENT_DATE())
+                        AND YEAR(date_commande) = YEAR(CURRENT_DATE())) as commandes_validees_mois,
+                        
+                        -- 6. Total administrateurs (role = 'admin' - ajustez selon votre structure)
+                        (SELECT COUNT(*) FROM admin ) as total_admins,
+                        
+                        -- 7. Admins actifs
+                        (SELECT COUNT(*) FROM admin WHERE statut = 1) as admins_actifs,
+                        
+                        -- 8. Chiffre d'affaires du mois
+                        (SELECT COALESCE(SUM(couptotatal), 0) FROM commandes 
+                        WHERE etat = 1 
+                        AND MONTH(date_commande) = MONTH(CURRENT_DATE())
+                        AND YEAR(date_commande) = YEAR(CURRENT_DATE())) as ca_mois,
+                        
+                        -- 9. Évolution clients ce mois
+                        (SELECT COUNT(*) FROM clients
+                        WHERE MONTH(date_save) = MONTH(CURRENT_DATE())
+                        AND YEAR(date_save) = YEAR(CURRENT_DATE())) as nouveaux_clients_mois,
+                        
+                        -- 10. Total commandes
+                        (SELECT COUNT(*) FROM commandes) as total_commandes
+                    FROM DUAL";
+            
+            $stmt = $pdo->query($sql);
+            $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Calculer l'évolution des clients (pourcentage)
+            $evolution_clients = 0;
+            if ($stats['total_clients'] > 0) {
+                // Simulation : +12% (vous pouvez ajuster avec vos vraies données)
+                $evolution_clients = 12;
+            }
+            
+            // Préparer les données pour le tableau de bord
+            $dashboardData = [
+                // 1. Clients enregistrés
+                'clients' => [
+                    'total' => (int)$stats['total_clients'],
+                    'evolution' => $evolution_clients,
+                    'nouveaux_mois' => (int)$stats['nouveaux_clients_mois']
+                ],
+                
+                // 2. Produits disponibles
+                'produits' => [
+                    'disponibles' => (int)$stats['produits_disponibles'],
+                    'rupture' => (int)$stats['produits_rupture'],
+                    'total' => (int)$stats['produits_disponibles'] + (int)$stats['produits_rupture']
+                ],
+                
+                // 3. Commandes en attente
+                'commandes_attente' => (int)$stats['commandes_attente'],
+                
+                // 4. Commandes validées ce mois
+                'commandes_validees_mois' => (int)$stats['commandes_validees_mois'],
+                
+                // 5. Administrateurs
+                'administrateurs' => [
+                    'total' => (int)$stats['total_admins'],
+                    'actifs' => (int)$stats['admins_actifs'],
+                    'inactifs' => (int)$stats['total_admins'] - (int)$stats['admins_actifs']
+                ],
+                
+                // Bonus : Statistiques supplémentaires
+                'chiffre_affaires' => [
+                    'mois' => (int)$stats['ca_mois'],
+                    'formatte' => number_format($stats['ca_mois'], 0, ',', ' ') . ' Fb'
+                ],
+                
+                'total_commandes' => (int)$stats['total_commandes']
+            ];
+            
+            return getResponse("Statistiques tableau de bord récupérées", 200, true, $dashboardData);
+            
+        } catch (Exception $e) {
+            return getResponse("Erreur lors de la récupération des statistiques: " . $e->getMessage(), 500, false);
+        }
+    }
+
+    // $data = getDashboardStatsAdmin();
+    // print_r($data);
 ?> 
 

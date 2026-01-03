@@ -34,104 +34,199 @@
                     </div>
                 </div>
 
-                <div class="row g-4">
-                    <!-- Clients enregistrés -->
-                    <div class="col-md-6 col-xl-6">
-                        <div class="card border-0 h-100 bg-primary bg-opacity-5">
-                            <div class="card-body d-flex align-items-center">
-                                <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
-                                    <i class="fi-users fs-3 text-primary"></i>
-                                </div>
-                                <div>
-                                    <h3 class="h6 text-muted mb-1">Clients enregistrés</h3>
-                                    <div class="h2 mb-0 fw-bold text-primary">1,245</div>
-                                    <p class="fs-sm text-muted mb-0">+12% ce mois</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Produits disponibles -->
-                    <div class="col-md-6 col-xl-6">
-                        <div class="card border-0 h-100 bg-success bg-opacity-5">
-                            <div class="card-body d-flex align-items-center">
-                                <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3">
-                                    <i class="fi-package fs-3 text-success"></i>
-                                </div>
-                                <div>
-                                    <h3 class="h6 text-muted mb-1">Produits disponibles</h3>
-                                    <div class="h2 mb-0 fw-bold text-success">568</div>
-                                    <p class="fs-sm text-muted mb-0">45 en rupture</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Commandes en attente -->
-                    <div class="col-md-6 col-xl-6">
-                        <div class="card border-0 h-100 bg-warning bg-opacity-5">
-                            <div class="card-body d-flex align-items-center">
-                                <div class="bg-warning bg-opacity-10 rounded-circle p-3 me-3">
-                                    <i class="fi-clock fs-3 text-warning"></i>
-                                </div>
-                                <div>
-                                    <h3 class="h6 text-muted mb-1">Commandes en attente</h3>
-                                    <div class="h2 mb-0 fw-bold text-warning">23</div>
-                                    <p class="fs-sm text-muted mb-0">À valider</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Commandes validées -->
-                    <div class="col-md-6 col-xl-6">
-                        <div class="card border-0 h-100 bg-success bg-opacity-5">
-                            <div class="card-body d-flex align-items-center">
-                                <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3">
-                                    <i class="fi-check-circle fs-3 text-success"></i>
-                                </div>
-                                <div>
-                                    <h3 class="h6 text-muted mb-1">Commandes validées</h3>
-                                    <div class="h2 mb-0 fw-bold text-success">412</div>
-                                    <p class="fs-sm text-muted mb-0">Ce mois-ci</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Total Administrateurs -->
-                    <div class="col-md-6 col-xl-6">
-                        <div class="card border-0 h-100 bg-info bg-opacity-5">
-                            <div class="card-body d-flex align-items-center">
-                                <div class="bg-info bg-opacity-10 rounded-circle p-3 me-3">
-                                    <i class="fi-shield fs-3 text-info"></i>
-                                </div>
-                                <div>
-                                    <h3 class="h6 text-muted mb-1">Total Administrateurs</h3>
-                                    <div class="h2 mb-0 fw-bold text-info">8</div>
-                                    <p class="fs-sm text-muted mb-0">Dont 5 actifs</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    
+                <!-- /////////////////////////////// -->
+<?php
+$dashboardStats = getDashboardStats();
+if($dashboardStats["success"]) {
+    $stats = $dashboardStats["data"];
+?>
+<div class="row g-4">
+    <!-- Clients enregistrés -->
+    <div class="col-md-6 col-xl-6">
+        <div class="card border-0 h-100 bg-primary bg-opacity-5">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle p-3 me-3 bg-primary bg-opacity-10">
+                    <i class="fi-users fs-3 text-primary"></i>
+                </div>
+                <div>
+                    <h3 class="h6 text-muted mb-1">Clients enregistrés</h3>
+                    <div class="h2 mb-0 fw-bold text-primary"><?= number_format($stats['clients']['total'], 0, ',', ' ') ?></div>
+                    <p class="fs-sm text-muted mb-0">
+                        <?php if($stats['clients']['evolution'] > 0): ?>
+                            <span class="text-success">
+                                <i class="fi-arrow-up fs-xs"></i> +<?= $stats['clients']['evolution'] ?>%
+                            </span>
+                        <?php elseif($stats['clients']['evolution'] < 0): ?>
+                            <span class="text-danger">
+                                <i class="fi-arrow-down fs-xs"></i> <?= $stats['clients']['evolution'] ?>%
+                            </span>
+                        <?php else: ?>
+                            <span class="text-muted">Stable</span>
+                        <?php endif; ?>
+                        ce mois
+                    </p>
                 </div>
             </div>
-            <div class="col-md-6 col-xl-6">
-                <div class="card border-0 h-100 bg-purple bg-opacity-5">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="bg- bg-opacity-10 rounded-circle p-3 me-3">
-                            <i class="fi-activity fs-3 text-purple"></i>
-                        </div>
-                        <div>
-                            <h3 class="h6 text-muted mb-1">Logs d'activité</h3>
-                            <div class="h2 mb-0 fw-bold text-purple">12,847</div>
-                            <p class="fs-sm text-muted mb-0">Derniers 30 jours</p>
-                        </div>
-                    </div>
+        </div>
+    </div>
+
+    <!-- Produits disponibles -->
+    <div class="col-md-6 col-xl-6">
+        <div class="card border-0 h-100 bg-success bg-opacity-5">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle p-3 me-3 bg-success bg-opacity-10">
+                    <i class="fi-package fs-3 text-success"></i>
+                </div>
+                <div>
+                    <h3 class="h6 text-muted mb-1">Produits disponibles</h3>
+                    <div class="h2 mb-0 fw-bold text-success"><?= number_format($stats['produits']['disponibles'], 0, ',', ' ') ?></div>
+                    <p class="fs-sm text-muted mb-0">
+                        <?= $stats['produits']['rupture'] ?> en rupture
+                    </p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Commandes en attente -->
+    <div class="col-md-6 col-xl-6">
+        <div class="card border-0 h-100 bg-warning bg-opacity-5">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle p-3 me-3 bg-warning bg-opacity-10">
+                    <i class="fi-clock fs-3 text-warning"></i>
+                </div>
+                <div>
+                    <h3 class="h6 text-muted mb-1">Commandes en attente</h3>
+                    <div class="h2 mb-0 fw-bold text-warning"><?= number_format($stats['commandes_attente'], 0, ',', ' ') ?></div>
+                    <p class="fs-sm text-muted mb-0">À valider</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Commandes validées -->
+    <div class="col-md-6 col-xl-6">
+        <div class="card border-0 h-100 bg-success bg-opacity-5">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle p-3 me-3 bg-success bg-opacity-10">
+                    <i class="fi-check-circle fs-3 text-success"></i>
+                </div>
+                <div>
+                    <h3 class="h6 text-muted mb-1">Commandes validées</h3>
+                    <div class="h2 mb-0 fw-bold text-success"><?= number_format($stats['commandes_validees_mois'], 0, ',', ' ') ?></div>
+                    <p class="fs-sm text-muted mb-0">Ce mois-ci</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Administrateurs -->
+    <div class="col-md-6 col-xl-6">
+        <div class="card border-0 h-100 bg-info bg-opacity-5">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle p-3 me-3 bg-info bg-opacity-10">
+                    <i class="fi-shield fs-3 text-info"></i>
+                </div>
+                <div>
+                    <h3 class="h6 text-muted mb-1">Total Administrateurs</h3>
+                    <div class="h2 mb-0 fw-bold text-info"><?= $stats['administrateurs']['total'] ?></div>
+                    <p class="fs-sm text-muted mb-0">
+                        Dont <?= $stats['administrateurs']['actifs'] ?> actif<?= $stats['administrateurs']['actifs'] > 1 ? 's' : '' ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Commandes -->
+    <div class="col-md-6 col-xl-6">
+        <div class="card border-0 h-100" style="background-color: rgba(111, 66, 193, 0.05);">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle p-3 me-3" style="background-color: rgba(111, 66, 193, 0.1);">
+                    <i class="fi-shopping-bag fs-3" style="color: #6f42c1;"></i>
+                </div>
+                <div>
+                    <h3 class="h6 text-muted mb-1">Total Commandes</h3>
+                    <div class="h2 mb-0 fw-bold" style="color: #6f42c1;">
+                        <?= isset($stats['total_commandes']) ? number_format($stats['total_commandes'], 0, ',', ' ') : '0' ?>
+                    </div>
+                    <p class="fs-sm text-muted mb-0">
+                        Toutes commandes confondues
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php 
+} else {
+    // En cas d'erreur
+?>
+<div class="alert alert-warning">
+    <div class="d-flex align-items-center">
+        <div class="rounded-circle p-2 me-3 bg-warning bg-opacity-10">
+            <i class="fi-alert-triangle text-warning"></i>
+        </div>
+        <div>
+            <h5 class="mb-1">Statistiques non disponibles</h5>
+            <p class="mb-0">Les données du tableau de bord ne sont pas disponibles pour le moment.</p>
+        </div>
+    </div>
+</div>
+<?php
+}
+?>
+
+<!-- CSS pour garantir la visibilité des icônes -->
+<style>
+/* Icônes toujours visibles */
+.fi-users, .fi-package, .fi-clock, .fi-check-circle, .fi-shield, .fi-shopping-bag,
+.fi-arrow-up, .fi-arrow-down, .fi-alert-triangle {
+    color: inherit !important;
+    fill: currentColor !important;
+}
+
+/* Ajustements pour le mode sombre */
+[data-bs-theme="dark"] .bg-primary.bg-opacity-5 {
+    background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+}
+[data-bs-theme="dark"] .bg-primary.bg-opacity-10 {
+    background-color: rgba(var(--bs-primary-rgb), 0.2) !important;
+}
+
+[data-bs-theme="dark"] .bg-success.bg-opacity-5 {
+    background-color: rgba(var(--bs-success-rgb), 0.1) !important;
+}
+[data-bs-theme="dark"] .bg-success.bg-opacity-10 {
+    background-color: rgba(var(--bs-success-rgb), 0.2) !important;
+}
+
+[data-bs-theme="dark"] .bg-warning.bg-opacity-5 {
+    background-color: rgba(var(--bs-warning-rgb), 0.1) !important;
+}
+[data-bs-theme="dark"] .bg-warning.bg-opacity-10 {
+    background-color: rgba(var(--bs-warning-rgb), 0.2) !important;
+}
+
+[data-bs-theme="dark"] .bg-info.bg-opacity-5 {
+    background-color: rgba(var(--bs-info-rgb), 0.1) !important;
+}
+[data-bs-theme="dark"] .bg-info.bg-opacity-10 {
+    background-color: rgba(var(--bs-info-rgb), 0.2) !important;
+}
+
+/* Pour la couleur purple personnalisée */
+[data-bs-theme="dark"] .card.border-0.h-100[style*="background-color: rgba(111, 66, 193, 0.05)"] {
+    background-color: rgba(111, 66, 193, 0.1) !important;
+}
+[data-bs-theme="dark"] .rounded-circle.p-3.me-3[style*="background-color: rgba(111, 66, 193, 0.1)"] {
+    background-color: rgba(111, 66, 193, 0.2) !important;
+}
+</style>
+                <!-- /////////////////////////////// -->
+               
+            </div> 
 
             <style>
                 .bg-purple {

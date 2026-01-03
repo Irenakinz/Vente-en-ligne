@@ -93,4 +93,7 @@
         else return getAdmins();
     }
 
+    function getDashboardStats(){
+        return getDashboardStatsAdmin();
+    }
 ?>
