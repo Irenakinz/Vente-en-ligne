@@ -1092,7 +1092,7 @@
         }
     }
     // Toutes les commandes// Toutes les commandes avec leurs produits
-    // ................................................................
+    // .}}}...............................................................
     function getAllCommandes()
     {
         $sql = "SELECT 
@@ -1104,7 +1104,7 @@
                     p.titre, p.image, pc.quantite AS quantiteCommande,
                     COUNT(pc.id_produit) as nombre_produits
                 FROM commandes cmd
-                INNER JOIN client cl ON cmd.client_id = cl.id
+                INNER JOIN clients cl ON cmd.client_id = cl.id
                 LEFT JOIN produit_commande pc ON cmd.id = pc.id_commande
                 LEFT JOIN produits p ON pc.id_produit = p.id
                 GROUP BY cmd.id, cmd.client_id, cmd.type_commande, cmd.couptotatal, 
@@ -1121,7 +1121,7 @@
                 return getResponse("Aucune commande trouvée", 404, false);
             }
 
-            return $commandes;
+            return getResponse("Commande ".count($commandes), 200, true, $commandes);
 
         } catch (Exception $e) {
             throw $e;
@@ -1157,7 +1157,7 @@
         try {
             $pdo = getConnection();
 
-            $sql = "UPDATE commande SET is_commande_paid = 1, etat = 1, date_livraison = NOW() WHERE id = :id";
+            $sql = "UPDATE commandes SET is_commande_paid = 1, etat = 1, date_livraison = NOW() WHERE id = :id";
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':id' => $id]);
@@ -1397,7 +1397,7 @@
         }
     }
  
-    // $data = getClients();
+    // $data = getAllCommandes();
     // print_r($data);
 ?> 
 

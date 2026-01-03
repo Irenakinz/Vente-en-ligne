@@ -115,19 +115,19 @@
                         </div>
                     </div>
 
-                    <!-- Total logs d'activité -->
-                    <div class="col-md-6 col-xl-6">
-                        <div class="card border-0 h-100 bg-purple bg-opacity-5">
-                            <div class="card-body d-flex align-items-center">
-                                <div class="bg- bg-opacity-10 rounded-circle p-3 me-3">
-                                    <i class="fi-activity fs-3 text-purple"></i>
-                                </div>
-                                <div>
-                                    <h3 class="h6 text-muted mb-1">Logs d'activité</h3>
-                                    <div class="h2 mb-0 fw-bold text-purple">12,847</div>
-                                    <p class="fs-sm text-muted mb-0">Derniers 30 jours</p>
-                                </div>
-                            </div>
+                    
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-6">
+                <div class="card border-0 h-100 bg-purple bg-opacity-5">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg- bg-opacity-10 rounded-circle p-3 me-3">
+                            <i class="fi-activity fs-3 text-purple"></i>
+                        </div>
+                        <div>
+                            <h3 class="h6 text-muted mb-1">Logs d'activité</h3>
+                            <div class="h2 mb-0 fw-bold text-purple">12,847</div>
+                            <p class="fs-sm text-muted mb-0">Derniers 30 jours</p>
                         </div>
                     </div>
                 </div>

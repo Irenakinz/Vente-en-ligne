@@ -33,283 +33,250 @@
               </div>
             </div>
  
+            <div id="server-message-statuts" class="mb-4" style="display: none;">
+                <div class="alert general alert-dismissible fade show" role="alert">
+                    <span id="message-text-status"></span>
+                    <button type="button" class="btn-close" onclick="generalHideMessage()"></button>
+                </div>
+            </div>
 
             <!-- ////////////////// -->
             <div class="card-body p-0 col-12 ">
                 <div class="table-responsive">
           
-                
-
-
+                                
+                <?php
+                $responseCommandes = getAllCommandes(); // Votre fonction qui retourne les données du JSON
+                if($responseCommandes["success"] && !empty($responseCommandes["data"])) {
+                    $counter = 1;
+                ?>
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4" style="width: 60px;">#</th>
-                            <th style="width: 100px;">Produit</th>
-                            <th style="width: 100px;">Client</th>
-                            <th style="width: 100px;" class="text-center">Dates</th>
-                            <th style="width: 100px;" class="text-center">Livraison</th>
-                            <th style="width: 120px;" class="text-end">Montant</th>
-                            <th style="width: 120px;" class="text-center pe-4">Action</th>
+                            <th class="ps-4" style="width: 20px;">#</th>
+                            <th style="width:200px;">Produit</th>
+                            <th style="width: 150px;">Client</th>
+                            <th style="width: 180px;" class="text-center">Dates</th>
+                            <th style="width: 120px;" class="text-center pe-4">Montant</th>
+                            <th style="width:40px;" class="text-center pe-4">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Commande 1 - Non validée -->
-                        <tr>
-                            <td class="ps-4 fw-semibold">1</td>
+                        <?php foreach($responseCommandes["data"] as $commande): 
+                            // Déterminer le statut et les classes CSS
+                            $isValidated = ($commande['etat'] == 1 || $commande['etat'] == 2);
+                            $rowClass = $isValidated ? 'table-success table-active' : '';
+                            $opacityClass = $isValidated ? 'opacity-75' : '';
+                            
+                            // Format des dates
+                            $dateCommande = date('d/m/Y', strtotime($commande['date_commande']));
+                            $dateLivraison = !empty($commande['date_livraison']) ? date('d/m/Y', strtotime($commande['date_livraison'])) : '';
+                            
+                            // Type de livraison
+                            $typeLivraisonText = '';
+                            $typeLivraisonClass = '';
+                            $typeLivraisonIcon = '';
+                            switch($commande['type_commande']) {
+                                case '1':
+                                    $typeLivraisonText = 'Retrait';
+                                    $typeLivraisonClass = 'bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25';
+                                    $typeLivraisonIcon = 'fi-store';
+                                    break;
+                                case '2':
+                                    $typeLivraisonText = 'Standard';
+                                    $typeLivraisonClass = 'bg-info bg-opacity-10 text-info border border-info border-opacity-25';
+                                    $typeLivraisonIcon = 'fi-truck';
+                                    break;
+                                case '3':
+                                    $typeLivraisonText = 'Express';
+                                    $typeLivraisonClass = 'bg-info bg-opacity-10 text-info border border-info border-opacity-25';
+                                    $typeLivraisonIcon = 'fi-rocket';
+                                    break;
+                                default:
+                                    $typeLivraisonText = 'Inconnu';
+                                    $typeLivraisonClass = 'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25';
+                                    $typeLivraisonIcon = 'fi-help-circle';
+                            }
+                            
+                            // Badge statut
+                            $statutText = '';
+                            $statutClass = '';
+                            $statutIcon = '';
+                            switch($commande['etat']) {
+                                case 0:
+                                    $statutText = 'En attente';
+                                    $statutClass = 'bg-secondary';
+                                    $statutIcon = 'fi-clock';
+                                    break;
+                                case 1:
+                                    $statutText = 'Validée';
+                                    $statutClass = 'bg-success';
+                                    $statutIcon = 'fi-check-circle';
+                                    break;
+                                case 2:
+                                    $statutText = 'Livrée';
+                                    $statutClass = 'bg-primary';
+                                    $statutIcon = 'fi-truck';
+                                    break;
+                                default:
+                                    $statutText = 'Inconnu';
+                                    $statutClass = 'bg-light text-dark';
+                                    $statutIcon = 'fi-help-circle';
+                            }
+                            
+                            // Image du produit
+                            $produitImage = !empty($commande['image']) ? 
+                                        BASE_URL . '/Vente-en-ligne/medias/' . $commande['image'] : 
+                                        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop';
+                            
+                            // Image du client
+                            $clientImage = !empty($commande['client_photo']) ? 
+                                        BASE_URL . '/Vente-en-ligne/medias/' . $commande['client_photo'] : 
+                                        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop';
+                            
+                            // Nom complet du client
+                            $nomClient = trim($commande['client_prenom'] . ' ' . $commande['client_nom']);
+                        ?>
+                        <tr class="<?= $rowClass ?>">
+                            <td class="ps-4 fw-semibold"><?= $counter++ ?></td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop" 
-                                        alt="Casque audio" 
-                                        class="rounded" 
+                                    <img src="<?= $produitImage ?>" 
+                                        alt="<?= htmlspecialchars($commande['titre']) ?>" 
+                                        class="rounded <?= $opacityClass ?>" 
                                         style="width: 40px; height: 40px; object-fit: cover;">
                                     <div>
-                                        <h6 class="mb-0 small">Casque Audio Pro X</h6>
+                                        <h6 class="mb-0 small"><?= htmlspecialchars($commande['titre']) ?></h6>
                                         <div class="d-flex align-items-center gap-1">
-                                            <span class="badge bg-primary">2</span>
-                                            <span class="text-muted xsmall">unités</span>
+                                            <span class="badge bg-primary"><?= $commande['quantiteCommande'] ?></span>
+                                            <span class="text-muted xsmall">unité<?= $commande['quantiteCommande'] > 1 ? 's' : '' ?></span>
                                         </div>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop" 
-                                        alt="Client" 
-                                        class="rounded-circle" 
+                                    <img src="<?= $clientImage ?>" 
+                                        alt="<?= htmlspecialchars($nomClient) ?>" 
+                                        class="rounded-circle <?= $opacityClass ?>" 
                                         style="width: 40px; height: 40px; object-fit: cover;">
                                     <div>
-                                        <h6 class="mb-0 small">Jean Dupont</h6>
-                                        <p class="text-muted xsmall mb-0">jean@mail.com</p>
+                                        <h6 class="mb-0 small"><?= htmlspecialchars($nomClient) ?></h6>
+                                        <p class="text-muted xsmall mb-0"><?= htmlspecialchars($commande['client_email']) ?></p>
                                     </div>
                                 </div>
                             </td>
                             <td class="text-center">
                                 <div class="d-flex flex-column gap-1">
-                                    <span class="badge bg-light text-dark">15/01/2024</span>
-                                    <span class="badge bg-secondary">En attente</span>
+                                    <div> 
+                                        <span class="badge bg-light text-dark"><?= $dateCommande ?></span>
+                                    </div>
+                                    <div> 
+                                        <span class="badge <?= $statutClass ?>">
+                                            <i class="<?= $statutIcon ?> me-1"></i><?= $statutText ?>
+                                        </span>
+                                    </div>
                                 </div>
                             </td>
-                            <td class="text-center">
-                                <span class="badge bg-info bg-opacity-10 text-info">Livraison</span>
-                            </td>
-                            <td class="text-end fw-bold">
-                                299,98 €
+                            <td class="text-center pe-4">
+                                <div class="d-flex flex-column gap-2">
+                                
+                                    
+                                    <!-- Montant -->
+                                    <div>
+                                        <div class="fw-bold text-dark fs-6">
+                                            <?= number_format($commande['couptotatal'], 0, ',', ' ') ?> Fb
+                                        </div>
+                                        <?php if($commande['nombre_produits'] > 1): ?>
+                                        <small class="text-muted">
+                                            <?= $commande['nombre_produits'] ?> produit<?= $commande['nombre_produits'] > 1 ? 's' : '' ?>
+                                        </small>
+                                        <?php endif; ?>
+                                    </div>
+                                    <!-- Livraison -->
+                                    <div>
+                                        <span class="badge <?= $typeLivraisonClass ?> d-inline-flex align-items-center gap-1">
+                                            <i class="<?= $typeLivraisonIcon ?>"></i>
+                                            <?= $typeLivraisonText ?>
+                                        </span>
+                                    </div>
+                                </div>
                             </td>
                             <td class="pe-4">
                                 <div class="d-flex justify-content-center">
-                                    <button class="btn btn-sm btn-success" title="Valider la commande">
-                                        <i class="fi-check me-1"></i>Valider
+                                    <?php if(!$isValidated): ?>
+                                    <button class="btn btn-sm btn-success" 
+                                            title="Valider la commande"
+                                            onclick="validerCommande(<?= $commande['id'] ?>)" 
+                                            id="submit_btn<?=$commande["id"]?>">
+                                        <div class="dot-spinner spine-bouse d-none" id="loading-spinner<?=$commande["id"]?>">
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                        </div>
+                                        <i class="fi-check me-1"></i><span id="submit-text<?=$commande["id"]?>">Valider</span>
                                     </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Commande 2 - Validée -->
-                        <tr class="table-success table-active">
-                            <td class="ps-4 fw-semibold">2</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=100&h=100&fit=crop" 
-                                        alt="Appareil photo" 
-                                        class="rounded opacity-75" 
-                                        style="width: 40px; height: 40px; object-fit: cover;">
-                                    <div>
-                                        <h6 class="mb-0 small">Appareil Photo</h6>
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span class="badge bg-primary">1</span>
-                                            <span class="text-muted xsmall">unité</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" 
-                                        alt="Client" 
-                                        class="rounded-circle opacity-75" 
-                                        style="width: 40px; height: 40px; object-fit: cover;">
-                                    <div>
-                                        <h6 class="mb-0 small">Marie Leroy</h6>
-                                        <p class="text-muted xsmall mb-0">marie@mail.com</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <div class="d-flex flex-column gap-1">
-                                    <span class="badge bg-light text-dark">14/01/2024</span>
-                                    <span class="badge bg-success">15/01/2024</span>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-warning bg-opacity-10 text-warning">Retrait</span>
-                            </td>
-                            <td class="text-end fw-bold">
-                                799,99 €
-                            </td>
-                            <td class="pe-4">
-                                <div class="d-flex justify-content-center">
+                                    <?php else: ?>
                                     <button class="btn btn-sm btn-outline-success" disabled title="Déjà validée">
                                         <i class="fi-check me-1"></i>Validée
                                     </button>
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
-
-                        <!-- Commande 3 - Non validée -->
-                        <tr>
-                            <td class="ps-4 fw-semibold">3</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=100&h=100&fit=crop" 
-                                        alt="Montre connectée" 
-                                        class="rounded" 
-                                        style="width: 40px; height: 40px; object-fit: cover;">
-                                    <div>
-                                        <h6 class="mb-0 small">Montre Connectée</h6>
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span class="badge bg-primary">3</span>
-                                            <span class="text-muted xsmall">unités</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" 
-                                        alt="Client" 
-                                        class="rounded-circle" 
-                                        style="width: 40px; height: 40px; object-fit: cover;">
-                                    <div>
-                                        <h6 class="mb-0 small">Thomas Martin</h6>
-                                        <p class="text-muted xsmall mb-0">thomas@mail.com</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <div class="d-flex flex-column gap-1">
-                                    <span class="badge bg-light text-dark">16/01/2024</span>
-                                    <span class="badge bg-secondary">En attente</span>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-info bg-opacity-10 text-info">Livraison</span>
-                            </td>
-                            <td class="text-end fw-bold">
-                                899,97 €
-                            </td>
-                            <td class="pe-4">
-                                <div class="d-flex justify-content-center">
-                                    <button class="btn btn-sm btn-success" title="Valider la commande">
-                                        <i class="fi-check me-1"></i>Valider
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Commande 4 - Validée -->
-                        <tr class="table-success table-active">
-                            <td class="ps-4 fw-semibold">4</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&h=100&fit=crop" 
-                                        alt="Chaussures sport" 
-                                        class="rounded opacity-75" 
-                                        style="width: 40px; height: 40px; object-fit: cover;">
-                                    <div>
-                                        <h6 class="mb-0 small">Chaussures Sport</h6>
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span class="badge bg-primary">1</span>
-                                            <span class="text-muted xsmall">unité</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" 
-                                        alt="Client" 
-                                        class="rounded-circle opacity-75" 
-                                        style="width: 40px; height: 40px; object-fit: cover;">
-                                    <div>
-                                        <h6 class="mb-0 small">Sophie Petit</h6>
-                                        <p class="text-muted xsmall mb-0">sophie@mail.com</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <div class="d-flex flex-column gap-1">
-                                    <span class="badge bg-light text-dark">13/01/2024</span>
-                                    <span class="badge bg-success">14/01/2024</span>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-info bg-opacity-10 text-info">Livraison</span>
-                            </td>
-                            <td class="text-end fw-bold">
-                                89,99 €
-                            </td>
-                            <td class="pe-4">
-                                <div class="d-flex justify-content-center">
-                                    <button class="btn btn-sm btn-outline-success" disabled title="Déjà validée">
-                                        <i class="fi-check me-1"></i>Validée
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Commande 5 - Non validée -->
-                        <tr>
-                            <td class="ps-4 fw-semibold">5</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1606788075767-20b25ec7e0ac?w=100&h=100&fit=crop" 
-                                        alt="Sac à dos" 
-                                        class="rounded" 
-                                        style="width: 40px; height: 40px; object-fit: cover;">
-                                    <div>
-                                        <h6 class="mb-0 small">Sac à Dos Pro</h6>
-                                        <div class="d-flex align-items-center gap-1">
-                                            <span class="badge bg-primary">2</span>
-                                            <span class="text-muted xsmall">unités</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" 
-                                        alt="Client" 
-                                        class="rounded-circle" 
-                                        style="width: 40px; height: 40px; object-fit: cover;">
-                                    <div>
-                                        <h6 class="mb-0 small">Pierre Dubois</h6>
-                                        <p class="text-muted xsmall mb-0">pierre@mail.com</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <div class="d-flex flex-column gap-1">
-                                    <span class="badge bg-light text-dark">17/01/2024</span>
-                                    <span class="badge bg-secondary">En attente</span>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge bg-warning bg-opacity-10 text-warning">Retrait</span>
-                            </td>
-                            <td class="text-end fw-bold">
-                                119,98 €
-                            </td>
-                            <td class="pe-4">
-                                <div class="d-flex justify-content-center">
-                                    <button class="btn btn-sm btn-success" title="Valider la commande">
-                                        <i class="fi-check me-1"></i>Valider
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
+
+                <script>
+                // Fonction pour valider une commande
+                function validerCommande(commandeId) {
+                    if (confirm('Êtes-vous sûr de vouloir valider cette commande ?')) {
+                        fetch('<?= BASE_URL ?>/api/commande/valider/' + commandeId, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                location.reload();
+                            } else {
+                                alert('Erreur: ' + (data.message || 'Impossible de valider la commande'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Une erreur est survenue');
+                        });
+                    }
+                }
+                </script>
+
+                <?php 
+                } else {
+                    // Aucune commande trouvée
+                ?>
+                <div class="text-center py-5">
+                    <div class="display-1 text-muted mb-4">
+                        <i class="fi-shopping-bag"></i>
+                    </div>
+                    <h4 class="text-muted mb-3">Aucune commande trouvée</h4>
+                    <p class="text-muted mb-4">
+                        Aucune commande n'a été passée pour le moment.
+                    </p>
+                </div>
+                <?php
+                }
+                ?>
+
+                                
 
                 <style>
                     .xsmall {
@@ -354,6 +321,95 @@
   <!-- footer de la page -->
   <?php include("includes/footer.php")?>
   <!-- footer de la page -->
+
+  <script>
+
+    let url_active_desacive = "../../app/index.php?action=commande/valider";
+
+    function validerCommande(id_commande) { 
+        let submit_text = document.getElementById(`submit-text${id_commande}`);
+        let loading_spinner = document.getElementById(`loading-spinner${id_commande}`);
+        let submit_btn = document.getElementById(`submit_btn${id_commande}`);
+
+        // Désactiver le bouton et afficher le spinner
+        submit_btn.disabled = true;
+
+        let originContent = submit_text.textContent;
+        submit_text.textContent = "...";
+        loading_spinner.classList.remove("d-none");
+        
+        // Préparation des données à envoyer
+        let formData = new FormData();  
+        formData.append("id",id_commande); 
+ 
+        // Options pour la requête fetch
+        const options = {  
+            method: 'POST',  
+            body: formData  
+            // Si votre API attend du JSON, utilisez ceci :
+            // headers: { 'Content-Type': 'application/json' },
+            // body: JSON.stringify({ email: email, password: password }) 
+        };
+        
+        // Envoi de la requête AJAX
+        fetch(url_active_desacive, options)
+        .then(response => {
+        // Vérifier le statut HTTP
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return response.json();
+        })
+        .then(data => {
+        // Traitement de la réponse
+        console.log("Réponse du serveur:", data);
+        
+        if (data.success) {
+        
+            setTimeout(()=>{ 
+                window.location.href = window.location.href;
+            },3000);
+
+            // Connexion réussie
+            generalShowMessage(data.message, type = 'success',
+            messageDiv="server-message-statuts",
+            messageText="message-text-status",
+            alertDiv=".alert.general") 
+ 
+            loading_spinner.classList.add("d-none");
+            submit_text.textContent = originContent;
+            submit_btn.disabled = false; 
+        } 
+        else {
+            // Erreur de connexion 
+            generalShowMessage(data.message || "Une erreur est survenu", type = 'error',
+            messageDiv="server-message-statuts",
+            messageText="message-text-status",
+            alertDiv=".alert.general")
+
+            // Réactiver le bouton
+            submit_btn.disabled = false;
+            submit_text.textContent = originContent;
+            loading_spinner.classList.add("d-none");
+        }
+        })
+        .catch(error => {
+            // Erreur réseau ou autre
+            console.error("Erreur:", error); 
+            generalShowMessage("Erreur de connexion au serveur. Veuillez réessayer", type = 'error',
+            messageDiv="server-message-statuts",
+            messageText="message-text-status",
+            alertDiv=".alert.general")
+
+            // Réactiver le bouton
+            submit_btn.disabled = false;
+            submit_text.textContent = originContent;
+            loading_spinner.classList.add("d-none");
+        }); 
+    
+    }
+
+  </script>
   
 </body>
 </html>

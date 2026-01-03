@@ -25,7 +25,7 @@
 
                 case "create":
                     if(isProduitValid($data)) {
-                        $response = addAdmin($data); 
+                        $response = addProduit($data); 
                         return $response;
                     }
                     else 

@@ -12,11 +12,7 @@
             if(empty($action)) {
                 throw new ErrorException("Aucune methode fourni",404);
             }
-// client_id
-// is_for_panier
-// type_commande
-// quantite
-// produit_id
+            
             switch($action) {  
                 case "create": 
                     if(isset($data["is_for_panier"]) && isset($data["client_id"]) && isset($data["type_commande"])
@@ -35,14 +31,19 @@
 
                                 $commande = array("client_id"=>$client_id, "type_commande"=>$type_commande, "produits"=>$lis_prpduit);
                                 return addCommande($commande);
-                            }
-                        
-                        return getResponse("Une erruer est survenu", 500, $success = false); 
+                            } 
                     } 
                     else 
                         throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire[".implode(array_keys($data)),404);
-               
-                default :;
+                    
+                case "valider":
+                    if(isset($data["id"]) && !empty($data["id"])) {
+                        return validerCommande($data["id"]);
+                    }
+                    else 
+                        throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire[".implode(array_keys($data)),404);
+                default :
+                    
             } 
         }
         catch(Exception $e) {
@@ -57,6 +58,10 @@
 
     function getStatistiqueClent($client_id) {
         return getClientStats($client_id);
+    }
+
+    function getCommandesList() {
+        return getAllCommandes();
     }
 
 ?>
