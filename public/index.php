@@ -183,14 +183,15 @@
             if($ResponseProduit["success"]) {
               $lastProduits = $ResponseProduit["data"];
               foreach($lastProduits as $produit) {
-        ?>
+                $imageProduit = BASE_URL."/Vente-en-ligne/medias/".$produit["image"];
+        ?>    
              <!-- Produit - Version boutons horizontaux -->
             <div class="swiper-slide h-auto">
                 <article class="card h-100 hover-effect-scale border-0 shadow-sm hover-shadow-lg transition-all">
                     <!-- Image avec overlay au survol -->
                     <div class="card-img-top position-relative overflow-hidden rounded-top" 
                         style="height: 200px;">
-                        <img src="<?php echo BASE_URL; ?>/Vente-en-ligne/medias/<?=$produit["image"]?>" 
+                        <img src="<?php echo $imageProduit ?>" 
                             alt="<?= htmlspecialchars($produit["titre"]) ?>" 
                             class="w-100 h-100 object-fit-cover transition-transform"
                             style="transition: transform 0.3s ease;">
@@ -238,7 +239,13 @@
                             <!-- Bouton Commander (principal) -->
                             <button type="button" 
                                     class="btn btn-success flex-fill d-flex align-items-center justify-content-center gap-1 py-2"
-                                    onclick="commanderProduit(<?=$produit['id']?>)">
+                                    data-produit-id="<?= htmlspecialchars($produit['id']) ?>"
+                                    data-produit-titre="<?= htmlspecialchars($produit['titre']) ?>"
+                                    data-produit-description="<?= htmlspecialchars($produit['description']) ?>"
+                                    data-produit-prix="<?= intval($produit['prix_unitaire']) ?>"
+                                    data-produit-stock="<?= intval($produit['quantite']) ?>"
+                                    data-produit-image="<?= htmlspecialchars($imageProduit) ?>"
+                                    onclick="initProduitDansModal(this)">
                                 <i class="fi-shopping-bag"></i>
                                 <span class="small">Commander</span>
                             </button>

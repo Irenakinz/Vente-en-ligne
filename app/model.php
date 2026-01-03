@@ -44,7 +44,12 @@
         $host = "localhost";
         $user = "root";
         $password = "";
-        $dbName = "quincaillerie_db"; //  
+        $dbName = "quincaillerie_db"; // 
+        
+        // $host = "sql211.infinityfree.com";
+        // $user = "f0_40808932";
+        // $password = "W7V8LkYQFMV";
+        // $dbName = "if0_40808932_quincaillerie_db"; //  
 
         try {
 
@@ -645,7 +650,7 @@
                 return getResponse("Stock insuffisant (quantite restant:".$produit['quantite'].")", 400, false);
             }
 
-            return getResponse("Stock valable", 200, true);;
+            return getResponse("Stock valable", 200, true);
 
         } catch (Exception $e) {
             throw $e;
@@ -718,13 +723,13 @@
             $pdo = getConnection();
 
             $checkStock = verifyStock($panier['produit_id'], $panier['quantite']);
-            if ($checkStock !== true) {
+            if ($checkStock["success"] !== true) {
                 return $checkStock;
             }
 
-            $sql = "UPDATE panier SET quantite = :quantite WHERE id = :id AND client_id = :client_id";
+            $sql_panier = "UPDATE panier SET quantite = :quantite WHERE id = :id AND client_id = :client_id";
 
-            $stmt = $pdo->prepare($sql);
+            $stmt = $pdo->prepare($sql_panier);
             $stmt->execute([
                 ':quantite' => $panier['quantite'],
                 ':id' => $panier['id'],
@@ -748,7 +753,7 @@
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':id' => $id]);
 
-            return getResponse("Produit supprimé du panier", 200, true);
+            return getResponse("Produit supprimé du panier avec success", 200, true);
 
         } catch (Exception $e) {
             throw $e;
@@ -756,11 +761,12 @@
     }
 
     // Récupérer le panier d'un client
-    function getAllPaniers($client_id)
+    function getPanier($client_id)
     {
-        $sql = "SELECT p.*, pr.titre, pr.image
+        $sql = "SELECT p.*,pr.id as produit_id, pr.titre, pr.image, pr.description, c.description categorie
                 FROM panier p
                 INNER JOIN produits pr ON p.produit_id = pr.id
+                INNER JOIN categorie c ON pr.categorie_id = c.id
                 WHERE p.client_id = :client_id";
 
         try {
@@ -773,7 +779,15 @@
                 return getResponse("Panier vide", 404, false);
             }
 
-            return $panier;
+            $coupTotal = 0;
+
+            foreach($panier as $produit) {
+                $coupTotal += $produit['quantite'] * $produit["prix_unitaire"];
+            }
+
+            $data = ["panier"=>$panier, "total"=>$coupTotal, "articles"=> count($panier)];
+
+            return getResponse("voir la liste", 404, true,$data); 
 
         } catch (Exception $e) {
             throw $e;
@@ -803,63 +817,245 @@
         }
     }
  
-    // ...........................................................
-
-    // GESTION DES COMMANDES
-    // Attributs : id, produit_id, client_id, type_commande, quantite,
-    // date_commande, date_livraison, is_commande_paid, etat 
-
-    // Ajouter une commande
-    function addCommande($commande){
-        try {
+    function deletePanierClient($client_id) {
+         try {
             $pdo = getConnection();
 
-            // Vérification du stock
-            $checkStock = verifyStock($commande['produit_id'], $commande['quantite']);
-
-            if ($checkStock !== true) {
-                return $checkStock;
-            }
-
-            // Récupérer le prix unitaire
-            $stmtPrice = $pdo->prepare(
-                "SELECT prix_unitaire FROM produits WHERE id = :id"
-            );
-
-            $stmtPrice->execute([':id' => $commande['produit_id']]);
-            $prixUnitaire = $stmtPrice->fetchColumn();
-
-            $sql = "INSERT INTO commande
-                    (produit_id, client_id, type_commande, quantite, prix_unitaire,
-                    date_commande, is_commande_paid, etat)
-                    VALUES
-                    (:produit_id, :client_id, :type_commande, :quantite, :prix_unitaire, NOW(), 0, 0)";
+            $sql = "DELETE FROM panier
+                    WHERE client_id = :client_id ";
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                ':produit_id' => $commande['produit_id'],
+                ':client_id' => $client_id, 
+            ]);
+
+            return getResponse("Panier supprimé", 200, true);
+
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+    // ...........................................................
+
+    // GESTION DES COMMANDES
+    // Attributs : id, client_id, type_commande, couptotatal,
+    // date_commande, date_livraison, is_commande_paid, etat 
+
+    //id_commande id_produit 
+
+    // Ajouter une commande 
+    function addCommande($commande){
+        try {
+            $pdo = getConnection();
+            
+            // Démarrer une transaction
+            $pdo->beginTransaction();
+
+            // Calculer le coût total en vérifiant le stock pour chaque produit
+            $couptotatal = 0;
+            $produitsCommandes = $commande['produits']; // Tableau des produits: [['id' => X, 'quantite' => Y], ...]
+
+            foreach ($produitsCommandes as $produit) {
+                // Vérification du stock pour chaque produit
+                $checkStock = verifyStock($produit['produit_id'], $produit['quantite']);
+                if ($checkStock["success"] !== true) {
+                    $pdo->rollBack();
+                    return $checkStock;
+                }
+
+                // Récupérer le prix unitaire
+                $stmtPrice = $pdo->prepare(
+                    "SELECT prix_unitaire FROM produits WHERE id = :id"
+                );
+                $stmtPrice->execute([':id' => $produit['produit_id']]);
+                $prixUnitaire = $stmtPrice->fetchColumn();
+
+                // Ajouter au coût total
+                $couptotatal += ($prixUnitaire * $produit['quantite']);
+            }
+
+            switch($commande['type_commande']) {
+                case 1: $couptotatal+=0;
+                case 2: $couptotatal+=3500;
+                case 3: $couptotatal+=6000;
+            }
+
+            // Insérer dans la table commandes
+            $sqlCommande = "INSERT INTO commandes 
+                            (client_id, type_commande, couptotatal, date_commande, date_livraison, is_commande_paid, etat)
+                            VALUES 
+                            (:client_id, :type_commande, :couptotatal, NOW(), :date_livraison, :is_commande_paid, :etat)";
+
+            $stmtCommande = $pdo->prepare($sqlCommande);
+            $stmtCommande->execute([
                 ':client_id' => $commande['client_id'],
                 ':type_commande' => $commande['type_commande'],
-                ':quantite' => $commande['quantite'],
-                ':prix_unitaire' => $prixUnitaire
+                ':couptotatal' => $couptotatal,
+                ':date_livraison' => isset($commande['date_livraison']) ? $commande['date_livraison'] : NULL,
+                ':is_commande_paid' => isset($commande['is_commande_paid']) ? $commande['is_commande_paid'] : 0,
+                ':etat' => isset($commande['etat']) ? $commande['etat'] : 0
             ]);
 
-            // Décrémentation du stock
-            $pdo->prepare(
-                "UPDATE produit SET quantite = quantite - :q WHERE id = :id"
-            )->execute([
-                ':q' => $commande['quantite'],
-                ':id' => $commande['produit_id']
-            ]);
+            // Récupérer l'ID de la commande nouvellement créée
+            $commandeId = $pdo->lastInsertId();
 
-            return getResponse("Commande realisé avec succès", 201, true);
+            // Insérer chaque produit dans la table produit_commande
+            foreach ($produitsCommandes as $produit) {
+                // Récupérer le prix unitaire à nouveau (ou utiliser un tableau pré-calculé)
+                $stmtPrice = $pdo->prepare("SELECT prix_unitaire FROM produits WHERE id = :id");
+                $stmtPrice->execute([':id' => $produit['produit_id']]);
+                $prixUnitaire = $stmtPrice->fetchColumn();
+
+                // Insérer dans produit_commande
+                $sqlProduitCommande = "INSERT INTO produit_commande 
+                                    (id_commande, id_produit, quantite, prix_unitaire)
+                                    VALUES 
+                                    (:id_commande, :id_produit, :quantite, :prix_unitaire)";
+
+                $stmtProduit = $pdo->prepare($sqlProduitCommande);
+                $stmtProduit->execute([
+                    ':id_commande' => $commandeId,
+                    ':id_produit' => $produit['produit_id'],
+                    ':quantite' => $produit['quantite'],
+                    ':prix_unitaire' => $prixUnitaire
+                ]);
+
+                // Décrémenter le stock pour ce produit
+                $pdo->prepare(
+                    "UPDATE produits SET quantite = quantite - :q WHERE id = :id"
+                )->execute([
+                    ':q' => $produit['quantite'],
+                    ':id' => $produit['produit_id']
+                ]);
+            }
+
+            deletePanierClient($commande['client_id']);
+
+            // Valider la transaction
+            $pdo->commit();
+
+            return getResponse("Commande réalisée avec succès. ID: " . $commandeId, 201, true, ['commande_id' => $commandeId]);
+
+        } catch (Exception $e) {
+            // Annuler la transaction en cas d'erreur
+            if (isset($pdo) && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            throw $e;
+        }
+    }
+
+    // si les produit provienne directement du panier
+    function addCommandeDepuisPanier($type_commande, $client_id) {
+        $pannier = getPanier( $client_id);
+
+        if(!$pannier["success"]) {
+            return getResponse("Une erreur est survenu, votre panier semble etre vide", 500, false);
+        }
+
+        $lis_prpduit = [];
+
+        foreach($pannier["data"]['panier'] as $produit) {
+            $id_produit = $produit["produit_id"];
+            $auantite = $produit["quantite"];
+            $lis_prpduit[] = array("produit_id"=>$id_produit, "quantite"=>$auantite);
+        }
+
+        
+
+        $commande = array("client_id"=>$client_id, "type_commande"=>$type_commande, "produits"=>$lis_prpduit);
+        return addCommande($commande);
+        
+    }  
+     
+    // Version alternative sans JSON (pour MySQL < 5.7)
+    function getCommandeByClientSimple($client_id)
+    {
+        $sql = "SELECT 
+                cmd.*,
+                cl.nom as client_nom,
+                cl.prenom as client_prenom,
+                FROM commandes cmd
+                INNER JOIN client cl ON cmd.client_id = cl.id
+                WHERE cmd.client_id = :client_id
+                ORDER BY cmd.date_commande DESC";
+
+        try {
+            $pdo = getConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':client_id' => $client_id]);
+
+            $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!$commandes) {
+                return getResponse("Aucune commande pour ce client", 404, false);
+            }
+
+            // Récupérer les détails des produits pour chaque commande
+            foreach ($commandes as &$commande) {
+                $sqlProduits = "SELECT 
+                                    pc.*,
+                                    p.titre,
+                                    p.image,
+                                    p.description,
+                                    (pc.quantite * pc.prix_unitaire) as sous_total
+                                FROM produit_commande pc
+                                INNER JOIN produits p ON pc.id_produit = p.id
+                                WHERE pc.id_commande = :commande_id";
+                
+                $stmtProduits = $pdo->prepare($sqlProduits);
+                $stmtProduits->execute([':commande_id' => $commande['id']]);
+                $produits = $stmtProduits->fetchAll(PDO::FETCH_ASSOC);
+                
+                $commande['produits_detaille'] = $produits;
+                $commande['nombre_produits'] = count($produits);
+            }
+ 
+            return getResponse("Commandes pour le client", 404, true, $commandes);
 
         } catch (Exception $e) {
             throw $e;
         }
     }
 
-    // Mettre à jour une commande (avant validation)
+    // Toutes les commandes// Toutes les commandes avec leurs produits
+    function getAllCommandes()
+    {
+        $sql = "SELECT 
+                    cmd.*,
+                    cl.nom as client_nom,
+                    cl.photo as client_photo,
+                    cl.prenom as client_prenom,
+                    cl.email as client_email,
+                    p.titre, p.image, pc.quantite AS quantiteCommande,
+                    COUNT(pc.id_produit) as nombre_produits
+                FROM commandes cmd
+                INNER JOIN client cl ON cmd.client_id = cl.id
+                LEFT JOIN produit_commande pc ON cmd.id = pc.id_commande
+                LEFT JOIN produits p ON pc.id_produit = p.id
+                GROUP BY cmd.id, cmd.client_id, cmd.type_commande, cmd.couptotatal, 
+                        cmd.date_commande, cmd.date_livraison, cmd.is_commande_paid, 
+                        cmd.etat, cl.nom, cl.prenom, cl.email
+                ORDER BY cmd.date_commande DESC";
+
+        try {
+            $pdo = getConnection();
+            $stmt = $pdo->query($sql);
+            $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!$commandes) {
+                return getResponse("Aucune commande trouvée", 404, false);
+            }
+
+            return $commandes;
+
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+
+    // ..............................................
     function updateCommande($id, $data)
     {
         $sql = "UPDATE commande SET type_commande = :type_commande, quantite = :quantite WHERE id = :id AND etat = 0";
@@ -899,29 +1095,7 @@
         }
     }
 
-    // Toutes les commandes
-    function getAllCommandes()
-    {
-        $sql = "SELECT c.*, p.titre, cl.nom, cl.prenom
-                FROM commande c INNER JOIN produits p ON c.produit_id = p.id
-                INNER JOIN client cl ON c.client_id = cl.id ORDER BY c.date_commande DESC";
-
-        try {
-            $pdo = getConnection();
-            $stmt = $pdo->query($sql);
-            $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if (!$commandes) {
-                return getResponse("Aucune commande trouvée", 404, false);
-            }
-
-            return $commandes;
-
-        } catch (Exception $e) {
-            throw $e;
-        }
-    }
-
+    
     // Commande par ID
     function getCommandeById($id)
     {
@@ -946,28 +1120,7 @@
     }
 
     // Commandes par client
-    function getCommandeByClient($client_id)
-    {
-        $sql = "SELECT * FROM commande WHERE client_id = :client_id ORDER BY date_commande DESC";
-
-        try {
-            $pdo = getConnection();
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([':client_id' => $client_id]);
-
-            $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if (!$commandes) {
-                return getResponse("Aucune commande pour ce client", 404, false);
-            }
-
-            return $commandes;
-
-        } catch (Exception $e) {
-            throw $e;
-        }
-    }
-
+    
     // Commandes par produit
     function getCommandeByProduit($produit_id)
     {
@@ -1172,3 +1325,4 @@
 
    
 ?> 
+

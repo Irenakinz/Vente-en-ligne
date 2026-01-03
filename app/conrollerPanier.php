@@ -15,14 +15,11 @@
 
             switch($action) {  
                 case "update": 
-                    if(isDataValid($data) && isset($data["id"]) && !empty($data["id"])) {
-                        $response = updateAdmin($data);
-                        if($response["success"]) {
-                            $_SESSION['user'] = getAdminById($data["id"]);
-                        }
-
-                        return $response;
-                    }
+                    if(isset($data["id"]) && isset($data["client_id"]) && isset($data["quantite"])
+                        && !empty($data["id"]) && !empty($data["client_id"]) && !empty($data["quantite"])) {
+                        $response = updatePanier($data); 
+                        return $response; 
+                    } 
                     else 
                         throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire[".implode(array_keys($data)),404); 
                     break;
@@ -37,11 +34,10 @@
                         throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire",404); 
                     break;
 
-                case "active_desactive":
-                    if(isset($data["statut"]) && isset($data["id_admin"])) {
-                        $id = intval($data["id_admin"]);
-                        $statut = intval($data["statut"]);
-                        $response = disableAdmin($id, $statut); 
+                case "delete":
+                    if(isset($data["id"])) {
+                        $id = intval($data["id"]); 
+                        $response = deleteToPanier($id); 
                         return $response; 
                     }
                     else 
@@ -70,9 +66,8 @@
     //     return false;
     // }
 
-    // function getAdmin($id=null) {
-    //     if($id) return getAdminById($id);
-    //     else return getAdmins();
-    // }
+    function getAllPaniers($client_id=null) {
+        if($client_id) return getPanier($client_id); 
+    }
 
 ?>

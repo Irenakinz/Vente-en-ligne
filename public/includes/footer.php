@@ -183,6 +183,7 @@
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/vendor/choices.js/choices.min.js"></script>
   <script src="assets/vendor/cleave.js/cleave.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   <!-- Bootstrap + Theme scripts -->
   <script src="assets/js/theme.min.js"></script>
@@ -355,72 +356,72 @@
 
 
 
-<!-- MODAL POUR LE LOGIN --> 
-<div class="modal fade" id="loginClientModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loginClientModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width: 450px;" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="loginClientModalLabel">Connexion à votre compte</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-      </div>
-      
-      <div class="modal-body p-4">
-        <div id="server-message-login" class="mb-4" style="display: none;">
-          <div class="alert login alert-dismissible fade show" role="alert">
-            <span id="message-text-login"></span>
-            <button type="button" class="btn-close" onclick="hideMessage('server-message-login')"></button>
-          </div>
+  <!-- MODAL POUR LE LOGIN --> 
+  <div class="modal fade" id="loginClientModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="loginClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 450px;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginClientModalLabel">Connexion à votre compte</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
         </div>
-
-        <form class="needs-validation" name="loginUserForm" validate onsubmit="return false">
-          
-          <div class="mb-4">
-            <label for="email" class="form-label">Adresse email</label>
-            <div class="position-relative">
-              <input type="email" name="email" class="form-control" id="email" placeholder="votre@email.com" required>
-              <div class="invalid-feedback">Veuillez saisir une adresse email valide</div>
+        
+        <div class="modal-body p-4">
+          <div id="server-message-login" class="mb-4" style="display: none;">
+            <div class="alert login alert-dismissible fade show" role="alert">
+              <span id="message-text-login"></span>
+              <button type="button" class="btn-close" onclick="hideMessage('server-message-login')"></button>
             </div>
           </div>
 
-          <div class="mb-4">
-            <label for="password" class="form-label">Mot de passe</label>
-            <div class="password-toggle position-relative">
-              <input type="password" name="password" class="form-control" id="password" placeholder="Votre mot de passe" required>
-              <button type="button" class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-decoration-none text-secondary" onclick="togglePassword()">
-                <i class="bi bi-eye"></i>
-              </button>
-              <div class="invalid-feedback">Veuillez saisir votre mot de passe</div>
+          <form class="needs-validation" name="loginUserForm" validate onsubmit="return false">
+            
+            <div class="mb-4">
+              <label for="email" class="form-label">Adresse email</label>
+              <div class="position-relative">
+                <input type="email" name="email" class="form-control" id="email" placeholder="votre@email.com" required>
+                <div class="invalid-feedback">Veuillez saisir une adresse email valide</div>
+              </div>
             </div>
-          </div> 
 
-          <button type="submit" class="btn btn-primary w-100 py-3" id="submit-btn-login" 
-          onclick="loginUser()">
-            <div class="dot-spinner d-none" id="loading-spinner-login">
-              <div class="dot-spinner__dot"></div>
-              <div class="dot-spinner__dot"></div>
-              <div class="dot-spinner__dot"></div>
-              <div class="dot-spinner__dot"></div>
-              <div class="dot-spinner__dot"></div>
-              <div class="dot-spinner__dot"></div>
-              <div class="dot-spinner__dot"></div>
-              <div class="dot-spinner__dot"></div>
-            </div>
-            <span id="submit-text-login">Se connecter</span>
-          </button>
+            <div class="mb-4">
+              <label for="password" class="form-label">Mot de passe</label>
+              <div class="password-toggle position-relative">
+                <input type="password" name="password" class="form-control" id="password" placeholder="Votre mot de passe" required>
+                <button type="button" class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-decoration-none text-secondary" onclick="togglePassword()">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <div class="invalid-feedback">Veuillez saisir votre mot de passe</div>
+              </div>
+            </div> 
 
-        </form>
+            <button type="submit" class="btn btn-primary w-100 py-3" id="submit-btn-login" 
+            onclick="loginUser()">
+              <div class="dot-spinner d-none" id="loading-spinner-login">
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+              </div>
+              <span id="submit-text-login">Se connecter</span>
+            </button>
 
-        <div class="text-center mt-4 pt-3 border-top">
-          <p class="text-body-secondary mb-2">Vous n'avez pas encore de compte ?</p>
-          <button type="button" class="btn btn-outline-primary" onclick="showModalById('createAccount','loginClientModal')">
-            Créer un compte gratuitement
-          </button>
+          </form>
+
+          <div class="text-center mt-4 pt-3 border-top">
+            <p class="text-body-secondary mb-2">Vous n'avez pas encore de compte ?</p>
+            <button type="button" class="btn btn-outline-primary" onclick="showModalById('createAccount','loginClientModal')">
+              Créer un compte gratuitement
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
- <!-- //////////////////////// -->
+  <!-- //////////////////////// -->
 
   <!-- Modal pour création de compte -->
   <div class="modal fade" id="createAccount" data-bs-backdrop="static" tabindex="-1" aria-labelledby="createAccountLabel" >
@@ -1086,250 +1087,355 @@
 
     //.........................................................
 
-    //showModalById("loginClientModal")   
+    
 
   </script>
 
- 
-  
-    <script>
 
-    let url_account = "../app/index.php?action=client/create"; 
-    let url_login = "../app/index.php?action=client/login"; 
-    let url_pagner_add = "../app/index.php?action=panier/ajout_au_panier"; 
+    <!-- AJOUT COMMANDES -->
+    <!-- Modal de commande simple -->
+<!-- Modal de commande simple -->
+<div class="modal fade" id="modalCommandeSimple" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 600px;">
+        <div class="modal-content">
+            <!-- En-tête -->
+            <div class="modal-header py-2">
+                <h5 class="modal-title fs-6">
+                    <i class="fi-shopping-cart me-2"></i>
+                    Nouvelle commande
+                </h5>
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <!-- Formulaire -->
+            <div class="modal-body py-2">
+                <form id="formCommandeSimple">
+                    <!-- Produit sélectionné -->
+                    <div class="card border mb-3">
+                        <div class="card-body p-2">
+                            <div class="row g-2 align-items-center">
+                                <!-- Image du produit -->
+                                <div class="col-3">
+                                    <div class="ratio ratio-1x1">
+                                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop"
+                                            alt="Produit" 
+                                            class="img-fluid rounded border object-fit-cover">
+                                    </div>
+                                </div>
+                                
+                                <!-- Titre et informations -->
+                                <div class="col-9">
+                                    <h6 class="mb-1 fw-bold fs-sm" id="modalProductTitle">Titre du produit</h6>
+                                    <p class="text-muted mb-1 fs-xs" id="modalProductDescription">
+                                        Description courte du produit sélectionné
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-primary fw-bold fs-sm" id="modalProductPrice">0 Fb</span>
+                                        <small class="text-muted fs-xs">Stock: <span id="stockDisponible">50</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3">
+                        <!-- Type de commande -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium fs-sm">
+                                <i class="fi-truck me-1"></i>
+                                Type de livraison
+                            </label>
+                            <select class="form-select form-select-sm" name="type_commande" id="typeCommandeSelect" required>
+                                <option value="">Sélectionnez...</option>
+                                <option value="retrait">Retrait magasin (Gratuit)</option>
+                                <option value="standard">Livraison standard (+3 500 Fb)</option>
+                                <option value="express">Livraison express (+6 000 Fb)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Quantité -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium fs-sm">
+                                <i class="fi-package me-1"></i>
+                                Quantité
+                            </label>
+                            <div class="input-group input-group-sm">
+                                <button type="button" class="btn btn-outline-secondary" onclick="decrementQty()">
+                                    <i class="fi-minus"></i>
+                                </button>
+                                <input type="number" class="form-control text-center" 
+                                      name="quantite" id="quantiteInput" value="1" min="1" required
+                                      style="border-left: 0; border-right: 0;">
+                                <button type="button" class="btn btn-outline-secondary" onclick="incrementQty()">
+                                    <i class="fi-plus"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted mt-1 d-block fs-xs">
+                                Stock: <span id="stockDisponibleText">50</span> unités
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Récapitulatif -->
+                    <div class="border-top pt-3 mt-3 mb-3">
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <div class="d-flex flex-column">
+                                    <small class="text-muted fs-xs">Prix unitaire</small>
+                                    <span class="fw-medium fs-sm" id="unitPriceDisplay">0 Fb</span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-4">
+                                <div class="d-flex flex-column">
+                                    <small class="text-muted fs-xs">Total articles</small>
+                                    <span class="fw-bold fs-sm" id="totalArticlesDisplay">0 Fb</span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-4">
+                                <div class="d-flex flex-column">
+                                    <small class="text-muted fs-xs">Frais livraison</small>
+                                    <span class="fw-medium fs-sm" id="livraisonCostDisplay">Gratuit</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center pt-3 mt-2 border-top">
+                            <span class="fw-bold fs-6">Montant total</span>
+                            <span class="h5 text-primary fw-bold" id="totalAmountDisplay">0 Fb</span>
+                        </div>
+                    </div> 
     
-    let is_ajout_au_panier_clicked = 0;
-    // Fonction principale de connexion
-    function createAccount() {
-      let form = document.forms.createAccountForm;
-      let submit_btn = document.getElementById("submit-btn");
-      let submit_text = document.getElementById("submit-text");
-      let loading_spinner = document.getElementById("loading-spinner");
-      
-      // Validation du formulaire
-      if (!form.checkValidity()) {
-          form.classList.add('was-validated');
-          return false;
+                    <!-- Boutons -->
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" data-bs-dismiss="modal">
+                            Annuler
+                        </button>
+                        <button type="submit" id="btn-commande-sans-panier" class="btn btn-primary btn-sm flex-fill">
+                            <div class="dot-spinner d-none" id="loading-spinner-commande-sans-panier">
+                                <div class="dot-spinner__dot"></div>
+                                <div class="dot-spinner__dot"></div>
+                                <div class="dot-spinner__dot"></div>
+                                <div class="dot-spinner__dot"></div>
+                                <div class="dot-spinner__dot"></div>
+                                <div class="dot-spinner__dot"></div>
+                                <div class="dot-spinner__dot"></div>
+                                <div class="dot-spinner__dot"></div>
+                            </div>
+                            <i class="fi-check me-1"></i>
+                            Confirmer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  // Variables pour le produit
+  let produitPrix = 2000;
+  let produitStock = 50;
+
+  // Frais de livraison
+  const fraisLivraison = {
+      'retrait': 0,
+      'standard': 3500,
+      'express': 6000
+  };
+
+  // Gestion de la quantité
+  function decrementQty() {
+      const input = document.getElementById('quantiteInput');
+      if (parseInt(input.value) > 1) {
+          input.value = parseInt(input.value) - 1;
+          updateCalculs();
       }
+  }
 
-      
-      let password2 = document.querySelector("input[name='password2']").value;
-      let password = document.querySelector("input[name='password1']").value;
-      
-      if(password2 !== password) { 
-          generalShowMessage(
-             "Les deux mots de passe doivent etre identiques"+password2+" || "+password, type = 'error',
-              messageDiv="server-message-create",
-              messageText="message-text-create",
-              alertDiv=".alert.create"
-          )
-          return
+  function incrementQty() {
+      const input = document.getElementById('quantiteInput');
+      if (parseInt(input.value) < produitStock) {
+          input.value = parseInt(input.value) + 1;
+          updateCalculs();
       }
-          
-      // Désactiver le bouton et afficher le spinner
-      submit_btn.disabled = true;
-      submit_text.textContent = "Creation en cours...";
-      loading_spinner.classList.remove("d-none");
+  }
+
+  // Mise à jour des calculs
+  function updateCalculs() {
+      const quantite = parseInt(document.getElementById('quantiteInput').value);
+      const typeLivraison = document.getElementById('typeCommandeSelect').value;
       
-      // Préparation des données à envoyer
-      let formData = new FormData(form);  
-      formData.append("role","admin");
-      formData.append("password", password2);
-
-
-      // Options pour la requête fetch
-      const options = {  
-          method: 'POST',  
-          body: formData  
-          // Si votre API attend du JSON, utilisez ceci :
-          // headers: { 'Content-Type': 'application/json' },
-          // body: JSON.stringify({ email: email, password: password }) 
-      };
+      // Calculer les montants
+      const totalArticles = produitPrix * quantite;
+      const frais = fraisLivraison[typeLivraison] || 0;
+      const total = totalArticles + frais;
       
-      // Envoi de la requête AJAX
-      fetch(url_account, options)
-          .then(response => {
-          // Vérifier le statut HTTP
-          if (!response.ok) {
-              throw new Error(`Erreur HTTP: ${response.status}`);
-          }
-          return response.json();
-          })
-          .then(data => {
-          // Traitement de la réponse
-          console.log("Réponse du serveur:", data);
-          
-          if (data.success) {
-          
-              setTimeout(()=>{ 
-                  showModalById('loginClientModal','createAccount')
-              },3000);
+      // Mettre à jour l'affichage
+      document.getElementById('totalArticlesDisplay').textContent = 
+          formatPrix(totalArticles) + ' Fb';
+      
+      // Afficher les frais de livraison
+      const livraisonElement = document.getElementById('livraisonCostDisplay');
+      if (frais === 0) {
+          livraisonElement.textContent = 'Gratuit';
+          livraisonElement.className = 'fw-medium text-success';
+      } else {
+          livraisonElement.textContent = formatPrix(frais) + ' Fb';
+          livraisonElement.className = 'fw-medium';
+      }
+      
+      document.getElementById('totalAmountDisplay').textContent = 
+          formatPrix(total) + ' Fb';
+  }
 
-              // Connexion réussie 
-              generalShowMessage(
-                  data.message || "Creation réussie !", type = 'success',
-                  messageDiv="server-message-create",
-                  messageText="message-text-create",
-                  alertDiv=".alert.create"
-              )
+  // Formatage du prix
+  function formatPrix(prix) {
+      return new Intl.NumberFormat('fr-FR').format(prix);
+  }
 
-              loading_spinner.classList.add("d-none");
-              submit_text.textContent = "Créer le compte";
-              submit_btn.disabled = false;
-              form.reset();
-              
-          } 
-          else {
-              // Erreur de connexion
-              generalShowMessage(
-                  data.message || "Creation echouee !", type = 'error',
-                  messageDiv="server-message-create",
-                  messageText="message-text-create",
-                  alertDiv=".alert.create"
-              )
+  // Fonction pour initialiser le produit
+  function initProduitDansModal(button) {
+    
+      let  produit_id = button.getAttribute('data-produit-id');
+      let  titre = button.getAttribute('data-produit-titre');
+      let  description = button.getAttribute('data-produit-description');
+      let  prix = parseInt(button.getAttribute('data-produit-prix'));
+      let  stock = parseInt(button.getAttribute('data-produit-stock'));
+      let  imageUrl = button.getAttribute('data-produit-image');
+    
+      document.getElementById('modalProductTitle').textContent = titre;
+      document.getElementById('modalProductDescription').textContent = description;
+      document.getElementById('modalProductPrice').textContent = formatPrix(prix) + ' Fb';
+      document.getElementById('stockDisponible').textContent = stock;
+      document.getElementById('unitPriceDisplay').textContent = formatPrix(prix) + ' Fb';
 
-              // Réactiver le bouton
-              submit_btn.disabled = false;
-              submit_text.textContent = "Créer le compte";
-              loading_spinner.classList.add("d-none");
-          }
-          })
-          .catch(error => {
-          // Erreur réseau ou autre 
-          generalShowMessage(
-              "Erreur de connexion au serveur. Veuillez réessayer.",
-               type = 'error',
-              messageDiv="server-message-create",
-              messageText="message-text-create",
-              alertDiv=".alert.create"
-          )
-              
-
-          // Réactiver le bouton
-          submit_btn.disabled = false;
-          submit_text.textContent = "Créer le compte";
-          loading_spinner.classList.add("d-none");
-          }); 
-    }
-
-    function ajoutAuPanier(produit_id) { 
+      // Mettre à jour l'image
+      const imgElement = document.querySelector('.card-body img');
+      if (imageUrl) {
+          imgElement.src = imageUrl;
+      }
+      
+      // Stocker les variables
+      produitPrix = prix;
+      produitStock = stock;
+      
       let is_connected = <?= $_IS_CONNECTED ?>; 
       if(is_connected == 0) { 
         showModalById("authRequired"); return
       }
-      else{
-        MisEnPanierDuProduit(produit_id);
-      }  
+      
+      // Initialiser les calculs
+      updateCalculs();
+      showModalById("modalCommandeSimple")   
+      let btn_commande_produit = document.getElementById("btn-commande-sans-panier");
+      btn_commande_produit.addEventListener("click",()=>{
+        passerCommande(produit_id)
+      })
+
+  }
+
+  // Écouter les changements de quantité
+  document.getElementById('quantiteInput').addEventListener('change', function() {
+      let valeur = parseInt(this.value);
+      if (valeur < 1) this.value = 1;
+      if (valeur > produitStock) this.value = produitStock;
+      updateCalculs();
+  });
+
+  // Écouter les changements du type de livraison
+  document.getElementById('typeCommandeSelect').addEventListener('change', function() {
+      updateCalculs();
+  });
+ 
+  // Exemple d'utilisation :
+  // initProduitDansModal(
+  //     'Perceuse visseuse sans fil',
+  //     'Perceuse puissante avec 2 batteries',
+  //     25000,
+  //     15,
+  //     'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+  // );
+ 
+</script>
+  <style>
+    /* Style personnalisé pour le modal */
+    #modalCommandeSimple .modal-content {
+        border-radius: 12px;
     }
 
-    function loginUser() {
-        let form = document.forms.loginUserForm;
-        let submit_btn = document.getElementById("submit-btn-login");
-        let submit_text = document.getElementById("submit-text-login");
-        let loading_spinner = document.getElementById("loading-spinner-login");
-        
-        // Validation du formulaire
-        if (!form.checkValidity()) {
-          form.classList.add('was-validated');
-          return false;
-        }
-        
-        // Récupération des données
-        let email = form.email.value.trim();
-        let password = form.password.value;
-        
-        // Désactiver le bouton et afficher le spinner
-        submit_btn.disabled = true;
-        submit_text.textContent = "Connexion...";
-        loading_spinner.classList.remove("d-none");
-        
-        // Préparation des données à envoyer
-        let formData = new FormData();
-        formData.append('email', email);
-        formData.append('password', password); 
-        
-        // Options pour la requête fetch
-        const options = {  method: 'POST',  body: formData   };
-        
-        // Envoi de la requête AJAX
-        fetch(url_login, options)
-          .then(response => {
-            // Vérifier le statut HTTP
-            if (!response.ok) {
-              throw new Error(`Erreur HTTP: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then(data => {
-            // Traitement de la réponse
-            console.log("Réponse du serveur:", data);
-            
-            if (data.success) {
-              // Connexion réussie 
-              generalShowMessage(
-                data.message+" Vous pouver alors commander les produits ou les ajouter a votre panier" || "Connexion réussie !", type = 'success',
-                messageDiv="server-message-login",
-                messageText="message-text-login",
-                alertDiv=".alert.login"
-              )
+    #modalCommandeSimple .modal-header {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-bottom: 1px solid #dee2e6;
+    }
 
-              setTimeout(()=>{
-                window.location.href = window.location.href; 
-              },4000)
-              
-            } 
-            else {
-              // Erreur de connexion 
-              generalShowMessage(
-                  data.message || "Email ou mot de passe incorrect", "error",
-                  messageDiv="server-message-login",
-                  messageText="message-text-login",
-                  alertDiv=".alert.login"
-              )
-              // Réactiver le bouton
-              submit_btn.disabled = false;
-              submit_text.textContent = "Se connecter";
-              loading_spinner.classList.add("d-none");
-            }
-          })
-          .catch(error => {
-            // Erreur réseau ou autre
-            console.error("Erreur:", error); 
-             generalShowMessage(
-                 "Erreur de connexion au serveur. Veuillez réessayer", "error",
-                  messageDiv="server-message-login",
-                  messageText="message-text-login",
-                  alertDiv=".alert.login"
-              )
-            // Réactiver le bouton
-            submit_btn.disabled = false;
-            submit_text.textContent = "Se connecter";
-            loading_spinner.classList.add("d-none");
-          }); 
-      }
-     
-    //..produit_id client_id quantite || 
-    function MisEnPanierDuProduit(produit_id) {  
-        let loading_spinner = document.getElementById(`loading_spinner_${produit_id}`);  
-        let submit_btn = document.getElementById(`submit_btn_${produit_id}`);  
-         
-        // Préparation des données à envoyer
-        let formData = new FormData();  
-        formData.append("produit_id", produit_id);
-        formData.append("client_id", <?=$_CLIENT_ID?>);
-        formData.append("quantite", 1);  
+    #modalCommandeSimple .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+    }
+  </style>
+  <!-- AJOUT COMMANDE -->
+
  
-        // Options pour la requête fetch
-        const options = {  
-            method: 'POST',  
-            body: formData   
-        };
-        
-        loading_spinner.classList.remove("d-none");
-        submit_btn.disabled = true;
+  
+<script>
+  
+  let url_account = "../app/index.php?action=client/create"; 
+  let url_login = "../app/index.php?action=client/login"; 
+  let url_pagner_add = "../app/index.php?action=panier/ajout_au_panier"; 
+  let url_commande_add_2 = "../app/index.php?action=commande/create"; 
+  
+  let is_ajout_au_panier_clicked = 0;
+  // Fonction principale de connexion
+  function createAccount() {
+    let form = document.forms.createAccountForm;
+    let submit_btn = document.getElementById("submit-btn");
+    let submit_text = document.getElementById("submit-text");
+    let loading_spinner = document.getElementById("loading-spinner");
+    
+    // Validation du formulaire
+    if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return false;
+    }
 
-        // Envoi de la requête AJAX
-        fetch(url_pagner_add, options)
+    
+    let password2 = document.querySelector("input[name='password2']").value;
+    let password = document.querySelector("input[name='password1']").value;
+    
+    if(password2 !== password) { 
+        generalShowMessage(
+          "Les deux mots de passe doivent etre identiques"+password2+" || "+password, type = 'error',
+            messageDiv="server-message-create",
+            messageText="message-text-create",
+            alertDiv=".alert.create"
+        )
+        return
+    }
+        
+    // Désactiver le bouton et afficher le spinner
+    submit_btn.disabled = true;
+    submit_text.textContent = "Creation en cours...";
+    loading_spinner.classList.remove("d-none");
+    
+    // Préparation des données à envoyer
+    let formData = new FormData(form);  
+    formData.append("role","admin");
+    formData.append("password", password2);
+
+
+    // Options pour la requête fetch
+    const options = {  
+        method: 'POST',  
+        body: formData  
+        // Si votre API attend du JSON, utilisez ceci :
+        // headers: { 'Content-Type': 'application/json' },
+        // body: JSON.stringify({ email: email, password: password }) 
+    };
+    
+    // Envoi de la requête AJAX
+    fetch(url_account, options)
         .then(response => {
         // Vérifier le statut HTTP
         if (!response.ok) {
@@ -1338,32 +1444,282 @@
         return response.json();
         })
         .then(data => {
+        // Traitement de la réponse
+        console.log("Réponse du serveur:", data);
+        
+        if (data.success) {
+        
+            setTimeout(()=>{ 
+                showModalById('loginClientModal','createAccount')
+            },3000);
+
+            // Connexion réussie 
+            generalShowMessage(
+                data.message || "Creation réussie !", type = 'success',
+                messageDiv="server-message-create",
+                messageText="message-text-create",
+                alertDiv=".alert.create"
+            )
+
+            loading_spinner.classList.add("d-none");
+            submit_text.textContent = "Créer le compte";
+            submit_btn.disabled = false;
+            form.reset();
+            
+        } 
+        else {
+            // Erreur de connexion
+            generalShowMessage(
+                data.message || "Creation echouee !", type = 'error',
+                messageDiv="server-message-create",
+                messageText="message-text-create",
+                alertDiv=".alert.create"
+            )
+
+            // Réactiver le bouton
+            submit_btn.disabled = false;
+            submit_text.textContent = "Créer le compte";
+            loading_spinner.classList.add("d-none");
+        }
+        })
+        .catch(error => {
+        // Erreur réseau ou autre 
+        generalShowMessage(
+            "Erreur de connexion au serveur. Veuillez réessayer.",
+            type = 'error',
+            messageDiv="server-message-create",
+            messageText="message-text-create",
+            alertDiv=".alert.create"
+        )
+            
+
+        // Réactiver le bouton
+        submit_btn.disabled = false;
+        submit_text.textContent = "Créer le compte";
+        loading_spinner.classList.add("d-none");
+        }); 
+  }
+
+  function ajoutAuPanier(produit_id) { 
+    let is_connected = <?= $_IS_CONNECTED ?>; 
+    if(is_connected == 0) { 
+      showModalById("authRequired"); return
+    }
+    else{
+      MisEnPanierDuProduit(produit_id);
+    }  
+  }
+
+  function loginUser() {
+      let form = document.forms.loginUserForm;
+      let submit_btn = document.getElementById("submit-btn-login");
+      let submit_text = document.getElementById("submit-text-login");
+      let loading_spinner = document.getElementById("loading-spinner-login");
+      
+      // Validation du formulaire
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return false;
+      }
+      
+      // Récupération des données
+      let email = form.email.value.trim();
+      let password = form.password.value;
+      
+      // Désactiver le bouton et afficher le spinner
+      submit_btn.disabled = true;
+      submit_text.textContent = "Connexion...";
+      loading_spinner.classList.remove("d-none");
+      
+      // Préparation des données à envoyer
+      let formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password); 
+      
+      // Options pour la requête fetch
+      const options = {  method: 'POST',  body: formData   };
+      
+      // Envoi de la requête AJAX
+      fetch(url_login, options)
+        .then(response => {
+          // Vérifier le statut HTTP
+          if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
           // Traitement de la réponse
           console.log("Réponse du serveur:", data);
           
           if (data.success) {
-          
-             sweetAlertSuccessMessage(data.message || "Produit ajoute au panier avec success", title = "Mis en panier reussi") 
-              // Connexion réussie  
-              loading_spinner.classList.add("d-none"); 
-              submit_btn.disabled = false; 
+            // Connexion réussie 
+            generalShowMessage(
+              data.message+" Vous pouver alors commander les produits ou les ajouter a votre panier" || "Connexion réussie !", type = 'success',
+              messageDiv="server-message-login",
+              messageText="message-text-login",
+              alertDiv=".alert.login"
+            )
+
+            setTimeout(()=>{
+              window.location.href = window.location.href; 
+            },4000)
+            
           } 
-          else { 
-              // Réactiver le bouton
-              sweetAlertDangerMessage(data.message || "Une erreur est survenu lors de mis en panier du produit",title = "Erreur...")
-              submit_btn.disabled = false; 
-              loading_spinner.classList.add("d-none");
+          else {
+            // Erreur de connexion 
+            generalShowMessage(
+                data.message || "Email ou mot de passe incorrect", "error",
+                messageDiv="server-message-login",
+                messageText="message-text-login",
+                alertDiv=".alert.login"
+            )
+            // Réactiver le bouton
+            submit_btn.disabled = false;
+            submit_text.textContent = "Se connecter";
+            loading_spinner.classList.add("d-none");
           }
         })
         .catch(error => {
-            // Erreur réseau ou autre
-            console.error("Erreur:", error); 
-            sweetAlertDangerMessage("Erreur de connexion au serveur. Veuillez réessayer",title = "Echec...")
+          // Erreur réseau ou autre
+          console.error("Erreur:", error); 
+          generalShowMessage(
+              "Erreur de connexion au serveur. Veuillez réessayer", "error",
+                messageDiv="server-message-login",
+                messageText="message-text-login",
+                alertDiv=".alert.login"
+            )
+          // Réactiver le bouton
+          submit_btn.disabled = false;
+          submit_text.textContent = "Se connecter";
+          loading_spinner.classList.add("d-none");
+        }); 
+    }
+  
+  //..produit_id client_id quantite || 
+  function MisEnPanierDuProduit(produit_id) {  
+      let loading_spinner = document.getElementById(`loading_spinner_${produit_id}`);  
+      let submit_btn = document.getElementById(`submit_btn_${produit_id}`);  
+      
+      // Préparation des données à envoyer
+      let formData = new FormData();  
+      formData.append("produit_id", produit_id);
+      formData.append("client_id", <?=$_CLIENT_ID?>);
+      formData.append("quantite", 1);  
+
+      // Options pour la requête fetch
+      const options = {  
+          method: 'POST',  
+          body: formData   
+      };
+      
+      loading_spinner.classList.remove("d-none");
+      submit_btn.disabled = true;
+
+      // Envoi de la requête AJAX
+      fetch(url_pagner_add, options)
+      .then(response => {
+      // Vérifier le statut HTTP
+      if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      return response.json();
+      })
+      .then(data => {
+        // Traitement de la réponse
+        console.log("Réponse du serveur:", data);
+        
+        if (data.success) {
+        
+          sweetAlertSuccessMessage(data.message || "Produit ajoute au panier avec success", title = "Mis en panier reussi") 
+            // Connexion réussie  
+            loading_spinner.classList.add("d-none"); 
+            submit_btn.disabled = false; 
+        } 
+        else { 
             // Réactiver le bouton
+            sweetAlertDangerMessage(data.message || "Une erreur est survenu lors de mis en panier du produit",title = "Erreur...")
             submit_btn.disabled = false; 
             loading_spinner.classList.add("d-none");
-        });  
-      } 
-  
+        }
+      })
+      .catch(error => {
+          // Erreur réseau ou autre
+          console.error("Erreur:", error); 
+          sweetAlertDangerMessage("Erreur de connexion au serveur. Veuillez réessayer",title = "Echec...")
+          // Réactiver le bouton
+          submit_btn.disabled = false; 
+          loading_spinner.classList.add("d-none");
+      });  
+    } 
+   
+  // passer commandes dehors du panier
+  function passerCommande(produit_id) {
+    let loading_spinner = document.getElementById(`loading-spinner-commande-sans-panier`);  
+    let submit_btn = document.getElementById(`btn-commande-sans-panier`);  
 
-    </script>
+    const formData = new FormData();
+    const typeLivraison = document.getElementById('typeCommandeSelect').value; 
+    let typeLivraisonObject = { 'retrait': 1, 'standard': 2, 'express': 3 };
+
+    const type_commande = typeLivraisonObject[typeLivraison] || 1;//ok
+    const quantite = parseInt(document.getElementById('quantiteInput').value); //ok  
+    
+    formData.append("client_id", <?=$_CLIENT_ID?>);
+    formData.append("is_for_panier", 0);  
+    formData.append("type_commande", type_commande);  
+    formData.append("quantite", quantite);  
+    formData.append("produit_id", produit_id);  
+
+      // Options pour la requête fetch
+      const options = {  
+          method: 'POST',  
+          body: formData   
+      };
+      
+      loading_spinner.classList.remove("d-none");
+      submit_btn.disabled = true;
+
+      // Envoi de la requête AJAX
+      fetch(url_commande_add_2, options)
+      .then(response => {
+      // Vérifier le statut HTTP
+      if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      return response.json();
+      })
+      .then(data => {
+        // Traitement de la réponse
+        console.log("Réponse du serveur:", data);
+        
+        if (data.success) {
+        
+            sweetAlertSuccessMessage(data.message || "Commande realise avec success", title = "Commande reussi") 
+            // Connexion réussie  
+            loading_spinner.classList.add("d-none"); 
+
+            setTimeout(()=>{
+              window.location.href = window.location.href;
+            },3000);
+
+            submit_btn.disabled = false; 
+        }
+        else { 
+            // Réactiver le bouton
+            sweetAlertDangerMessage(data.message || "Une erreur est survenu lors de la commande",title = "Commande echoue")
+            submit_btn.disabled = false; 
+            loading_spinner.classList.add("d-none");
+          }
+      })
+      .catch(error => {
+          // Erreur réseau ou autre
+          console.error("Erreur:", error); 
+          sweetAlertDangerMessage("Erreur de connexion au serveur. Veuillez réessayer",title = "Echec...")
+          // Réactiver le bouton
+          submit_btn.disabled = false; 
+          loading_spinner.classList.add("d-none");
+      });  
+  }
+
+</script>

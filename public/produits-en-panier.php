@@ -19,11 +19,11 @@
       <section class="container "> 
         <div class="row bg-body rounded p-3 pb-0 px-lg-5">
           <div class="col-lg-9 d-flex flex-column gap-4 py-sm-2 py-lg-3">
-            <h1 class="mb-3">Votre panier Salama</h1>
+         
             <div class="d-md-flex justify-content-between pb-lg-1 mb-md-2">
               <div class="d-flex align-items-start align-items-md-center mb-3 mb-md-0">
                 <div class="ratio ratio-1x1 bg-body-tertiary border rounded-circle overflow-hidden" style="width: 124px">
-                  <img src="assets/img/account/avatar-lg.jpg" alt="Avatar">
+                  <img src="<?= !empty($_SESSION['client']["photo"]) ? "../medias/".$_SESSION['client']["photo"] : "avatar.jpg"?>" alt="Avatar">
                 </div>
                 <div class="ps-3 ps-md-4 ms-lg-2">
                   <span class="badge text-bg-info d-inline-flex align-items-center mb-2">
@@ -55,412 +55,481 @@
         
         <!-- En-tête informatif pour la page panier -->
         <div class="border-0 mb-4">
-          <div class="d-flex align-items-start">
+          <div class="d-flex align-items-start justify-content-center">
             <i class="fi-info-circle fs-lg text-info me-3 mt-1"></i>
-            <div> 
-              <p class="mb-2">Sur cette page, vous pouvez :</p>
-              <ul class="mb-1">
-                <li><strong>Modifier les quantités</strong> : Utilisez les boutons + et - pour ajuster le nombre d'articles</li>
-                <li><strong>Retirer des produits</strong> : Cliquez sur l'icône <i class="fi-trash text-danger"></i> pour supprimer un article</li>
-                <li><strong>Choisir votre livraison</strong> : Sélectionnez votre mode de réception dans le résumé à droite</li>
-              </ul> 
+           <div> 
+                <h2 class="mb-3">Mon panier Salama</h2>
+                <p class="mb-0 text-center mx-auto">
+                    <strong>Gérez votre panier :</strong> 
+                    <i class="fi-minus mx-1"></i> Modifiez les quantités 
+                    <i class="fi-circle mx-1"></i> 
+                    <i class="fi-trash mx-1 text-danger"></i> Retirez des articles 
+                    <i class="fi-circle mx-1"></i> 
+                    <i class="fi-truck mx-1"></i> Choisissez votre livraison
+                </p>
             </div>
           </div>
         </div>
         <!-- Filter sidebar + Listings list view -->
         <div class="row pt-md-2 pt-lg-3 pb-2 pb-sm-3 pb-md-4 pb-lg-5">  
 
-          <!-- side bare -->
-          <aside class="col-lg-3">
-            <div class="sticky-top" style="top: 24px">
-              <!-- Résumé du panier -->
-              <div class="card border shadow-sm mb-4">
-                <div class="card-header py-3">
-                  <h3 class="h5 mb-0">Résumé du panier</h3>
-                </div>
-                <div class="card-body p-4">
-                  
-                  <!-- Options de livraison avec sélecteur déroulant -->
-                  <div class="mb-4">
-                    <h4 class="h6 mb-3">
-                      <i class="fi-truck me-2"></i>
-                      Mode de livraison
-                    </h4>
-                    
-                    <!-- Sélecteur déroulant principal -->
-                    <div class="mb-3">
-                      <select class="form-select" id="shippingMethod" aria-label="Choisir le mode de livraison">
-                        <option value="pickup" selected>Retrait en magasin - Gratuit</option>
-                        <option value="standard">Livraison standard - 9,90€</option>
-                        <option value="express">Livraison express - 19,90€</option>
-                      </select>
-                    </div>
-                    
-                    <!-- Détails dynamiques selon l'option sélectionnée -->
-                    <div id="shippingDetails">
-                      <!-- Détails par défaut pour Retrait en magasin -->
-                      <div class="border rounded p-3" id="pickupDetails">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div>
-                            <div class="fw-semibold mb-1">Retrait en magasin</div>
-                            <div class="text-success fw-semibold mb-1">Gratuit</div>
-                            <div class="text-body-secondary fs-xs">Avenue de l'Industrie, Bujumbura</div>
-                            <div class="text-body-secondary fs-xs">Ouvert du lundi au samedi, 7h30-18h</div>
-                          </div>
-                          <span class="badge bg-success bg-opacity-10 text-success">Recommandé</span>
-                        </div>
-                      </div>
-                      
-                      <!-- Détails pour Livraison standard (caché par défaut) -->
-                      <div class="border rounded p-3 d-none" id="standardDetails">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div>
-                            <div class="fw-semibold mb-1">Livraison standard</div>
-                            <div class="text-body-secondary mb-1">9,90€</div>
-                            <div class="text-body-secondary fs-xs">Délai: 2-3 jours ouvrés</div>
-                            <div class="text-body-secondary fs-xs">Suivi de colis inclus</div>
-                            <div class="text-body-secondary fs-xs">Zone de livraison: Bujumbura et périphérie</div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <!-- Détails pour Livraison express (caché par défaut) -->
-                      <div class="border rounded p-3 d-none" id="expressDetails">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div>
-                            <div class="fw-semibold mb-1">Livraison express</div>
-                            <div class="text-body-secondary mb-1">19,90€</div>
-                            <div class="text-body-secondary fs-xs">Délai: 24h</div>
-                            <div class="text-body-secondary fs-xs">Livraison avant 12h</div>
-                            <div class="text-body-secondary fs-xs">Zone de livraison: Bujumbura uniquement</div>
-                          </div>
-                          <span class="badge bg-warning bg-opacity-10 text-warning">Rapide</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Script JavaScript pour gérer l'affichage dynamique -->
-                  <script>
-                  document.addEventListener('DOMContentLoaded', function() {
-                    const shippingSelect = document.getElementById('shippingMethod');
-                    const pickupDetails = document.getElementById('pickupDetails');
-                    const standardDetails = document.getElementById('standardDetails');
-                    const expressDetails = document.getElementById('expressDetails');
-                    
-                    function updateShippingDetails() {
-                      // Cacher tous les détails
-                      pickupDetails.classList.add('d-none');
-                      standardDetails.classList.add('d-none');
-                      expressDetails.classList.add('d-none');
-                      
-                      // Afficher les détails correspondant à la sélection
-                      const selectedValue = shippingSelect.value;
-                      if (selectedValue === 'pickup') {
-                        pickupDetails.classList.remove('d-none');
-                      } else if (selectedValue === 'standard') {
-                        standardDetails.classList.remove('d-none');
-                      } else if (selectedValue === 'express') {
-                        expressDetails.classList.remove('d-none');
-                      }
-                      
-                      // Mettre à jour le total (exemple)
-                      updateTotalPrice();
-                    }
-                    
-                    function updateTotalPrice() {
-                      const shippingCosts = {
-                        'pickup': 0,
-                        'standard': 9.90,
-                        'express': 19.90
-                      };
-                      
-                      const selectedMethod = shippingSelect.value;
-                      const shippingCost = shippingCosts[selectedMethod];
-                      
-                      // Ici tu peux mettre à jour l'affichage du total
-                      // Exemple: document.getElementById('shippingCost').textContent = shippingCost + '€';
-                      // Exemple: document.getElementById('totalPrice').textContent = (subtotal + shippingCost) + '€';
-                    }
-                    
-                    // Écouter les changements de sélection
-                    shippingSelect.addEventListener('change', updateShippingDetails);
-                    
-                    // Initialiser l'affichage
-                    updateShippingDetails();
-                  });
-                  </script>
-                  
-                  <!-- Récapitulatif des prix -->
-                  <div class="border-top pt-4">
-                    <!-- Sous-total -->
-                    <div class="d-flex justify-content-between mb-2">
-                      <span class="text-body-secondary">Sous-total (3 articles)</span>
-                      <span class="fw-semibold">322,60€</span>
-                    </div>
-                    
-                    <!-- Frais de livraison -->
-                    <div class="d-flex justify-content-between mb-2">
-                      <span class="text-body-secondary">Frais de livraison</span>
-                      <span class="fw-semibold">Gratuit</span>
-                    </div>
-                    
-                    <!-- Ligne séparatrice -->
-                    <hr class="my-3">
-                    
-                    <!-- Total -->
-                    <div class="d-flex justify-content-between mb-4">
-                      <span class="h5 mb-0">Total à payer</span>
-                      <span class="h5 text-primary mb-0">312,60€</span>
-                    </div>
-                    
-                    <!-- Bouton de commande -->
-                    <button type="button" class="btn btn-primary btn-lg w-100 mb-3">
-                      <i class="fi-check-circle me-2"></i>
-                      Passer la commande
-                    </button>
-                    
-                    <!-- Paiement sécurisé -->
-                    <div class="text-center mb-3">
-                      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                        <i class="fi-shield-check me-1"></i>
-                        Paiement 100% sécurisé
-                      </span>
-                    </div> 
-                  </div>
-                </div>
-              </div>
-                
-            </div>
-          </aside>
-          <!-- ///////////////////////////////// -->
 
           <!-- Listings list view -->
           <div class="col-lg-9 mx-auto"> 
+            <?php
+                $ResponsePanier = getAllPaniers($_CLIENT_ID);
+                if($ResponsePanier["success"]) {
+            ?>
             <!-- Grid of items -->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-2 row-cols-xl-3 g-4 g-sm-3 g-lg-4">
-              <!-- Produit 1 dans le panier -->
+            <?php
+             
+                  $produitEnPanier = $ResponsePanier["data"]; 
+                  foreach($produitEnPanier["panier"] as $produit) {
+            ?>
+              <!-- Produit 1 dans le panier . -->
               <div class="col">
                 <article class="card h-100 hover-effect-scale bg-body-tertiary border-0">
-                  <div class="card-img-top position-relative overflow-hidden">
-                    <div class="d-flex flex-column gap-2 align-items-start position-absolute top-0 start-0 z-1 pt-1 pt-sm-0 ps-1 ps-sm-0 mt-2 mt-sm-3 ms-2 ms-sm-3">
-                      <span class="badge text-bg-info d-inline-flex align-items-center">
-                        En stock
-                        <i class="fi-box ms-1"></i>
-                      </span>
-                      <span class="badge text-bg-primary">Dans panier</span>
-                    </div>
-                    <div class="ratio hover-effect-target bg-body-secondary" style="--fn-aspect-ratio: calc(204 / 306 * 100%)">
-                      <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Perceuse-visseuse sans fil">
-                    </div>
-                  </div>
-                  <div class="card-body pb-3">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                      <div class="fs-xs text-body-secondary">Outillage électrique</div>
-                      <div class="d-flex gap-1 position-relative z-2">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger rounded-circle" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-sm" title="Retirer du panier" aria-label="Retirer du panier">
-                          <i class="fi-trash fs-sm"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <h3 class="h6 mb-2">
-                      <a class="hover-effect-underline   me-1" href="single-product.html">Perceuse-Visseuse 18V</a>
-                    </h3>
-                    <div class="h6 mb-0">89,90€</div>
-                    
-                    <!-- Contrôle quantité mini -->
-                    <div class="mt-3">
-                      <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center bg-light rounded-2 border">
-                          <button type="button" class="btn btn-outline-secondary border-0 btn-xs rounded-start-2 px-2 py-1" aria-label="Diminuer quantité">
-                            <i class="fi-minus fs-xs"></i>
-                          </button>
-                          <span class="px-2 py-1 fw-semibold">1</span>
-                          <button type="button" class="btn btn-outline-secondary border-0 btn-xs rounded-end-2 px-2 py-1" aria-label="Augmenter quantité">
-                            <i class="fi-plus fs-xs"></i>
-                          </button>
+                    <div class="card-img-top position-relative overflow-hidden">
+                        <div class="d-flex flex-column gap-2 align-items-start position-absolute top-0 start-0 z-1 pt-1 ps-1 mt-2 ms-2">
+                            <span class="badge text-bg-info d-inline-flex align-items-center fs-xxs py-1">
+                                En stock
+                                <i class="fi-box ms-1 fs-sm"></i>
+                            </span> 
                         </div>
-                        <div class="text-primary fw-semibold">89,90€</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-4">
-                    <div class="border-top pt-3">
-                      <div class="row row-cols-2 g-2 fs-sm">
-                        <div class="col d-flex align-items-center gap-2">
-                          <i class="fi-battery"></i>
-                          2 batteries
+                        <div class="ratio hover-effect-target bg-body-secondary" style="height: 180px;">
+                            <img src="<?php echo BASE_URL; ?>/Vente-en-ligne/medias/<?=$produit["image"]?>" 
+                                alt="<?= htmlspecialchars($produit["titre"]) ?>" 
+                                class="w-100 h-100 object-fit-cover transition-transform"
+                                style="transition: transform 0.3s ease;">
                         </div>
-                        <div class="col d-flex align-items-center gap-2">
-                          <i class="fi-star"></i>
-                          4.6/5
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <div class="fs-xxs text-body-secondary"><?=$produit["categorie"]?></div>
+                            <div class="d-flex gap-1">
+                                <button type="button" 
+                                        class="btn btn-outline-danger d-flex align-items-center gap-1 p-1"
+                                        onclick="retirerDuPanier(<?=$produit['id']?>)"
+                                        id="btn-delete-pannier-<?=$produit['id']?>">
+                                    <i class="fi-trash fs-sm"></i>
+                                    <span class="d-none d-sm-inline">Retirer</span>
+                                    <div class="dot-spinner d-none" id="loading-spinner-delete-panier-<?=$produit['id']?>">
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div> 
+                        <h3 class="h6 mb-1 fs-sm"><?=$produit["titre"]?></h3> 
+                        <div class="h6 mb-2 fs-sm"><?=$produit["prix_unitaire"]?>Fb</div> 
+                        
+                        <div class="mt-2 border-top pt-2"> 
+                            <!-- Section modification quantité -->
+                            <div class="mb-2">
+                                <!-- Sélecteur de quantité compact -->
+                                <div class="d-flex align-items-center justify-content-between bg-light rounded-pill border shadow-sm" 
+                                    style="background: linear-gradient(to right, #f8f9fa, #e9ecef);">
+                                    <!-- Bouton diminuer -->
+                                    <button type="button" 
+                                            class="btn btn-outline-secondary border-0 rounded-start-pill px-2 py-1"
+                                            onclick="updatePannier(<?=$produit['id']?>, <?=$produit['produit_id']?>, <?=(int)($produit['quantite'] - 1)?>)"
+                                            aria-label="Diminuer quantité"
+                                            <?= $produit["quantite"] <= 1 ? '' : '' ?>
+                                            style="min-width: 35px;" 
+                                            id="btn-pannier-<?=(int)($produit['quantite'] - 1)?>">
+                                        <i class="fi-minus fs-sm"></i>
+                                         <div class="dot-spinner d-none" id="loading-spinner-panier-<?=(int)($produit['quantite'] - 1)?>">
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                        </div>
+                                    </button>
+                                    
+                                    <!-- Affichage quantité -->
+                                    <div class="px-3 text-center">
+                                        <div class="fw-bold text-dark"><?= $produit["quantite"] ?></div>
+                                        <div class="text-muted small">Quantité</div>
+                                    </div>
+                                    
+                                    <!-- Bouton augmenter -->
+                                    <button type="button" 
+                                            class="btn btn-outline-secondary border-0 rounded-end-pill px-2 py-1"
+                                            onclick="updatePannier(<?=$produit['id']?>, <?=$produit['produit_id']?>, <?=(int)($produit['quantite'] + 1)?>)"
+                                            aria-label="Augmenter quantité"
+                                            style="min-width: 35px;" id="btn-pannier-<?=(int)($produit['quantite'] + 1)?>">
+                                        <i class="fi-plus fs-sm"></i>
+                                        <div class="dot-spinner d-none" id="loading-spinner-panier-<?=(int)($produit['quantite'] + 1)?>">
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                            <div class="dot-spinner__dot"></div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Section prix total -->
+                            <div class="border-top pt-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-muted small">Sous-total :</div>
+                                    <div class="text-primary fw-bold">
+                                        <?= number_format(intval($produit["quantite"] * $produit["prix_unitaire"]), 0, ',', ' ') ?> Fb
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit 2 dans le panier -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale bg-body-tertiary border-0">
-                  <div class="card-img-top position-relative overflow-hidden">
-                    <div class="d-flex flex-column gap-2 align-items-start position-absolute top-0 start-0 z-1 pt-1 pt-sm-0 ps-1 ps-sm-0 mt-2 mt-sm-3 ms-2 ms-sm-3">
-                      <span class="badge text-bg-info d-inline-flex align-items-center">
-                        En stock
-                        <i class="fi-box ms-1"></i>
-                      </span>
-                      <span class="badge text-bg-warning">Promotion</span>
-                    </div>
-                    <div class="ratio hover-effect-target bg-body-secondary" style="--fn-aspect-ratio: calc(204 / 306 * 100%)">
-                      <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Peinture murale">
-                    </div>
-                  </div>
-                  <div class="card-body pb-3">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                      <div class="fs-xs text-body-secondary">Matériaux peinture</div>
-                      <div class="d-flex gap-1 position-relative z-2">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger rounded-circle" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-sm" title="Retirer du panier" aria-label="Retirer du panier">
-                          <i class="fi-trash fs-sm"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <h3 class="h6 mb-2">
-                      <a class="hover-effect-underline   me-1" href="single-product.html">Peinture Blanche 5L</a>
-                    </h3>
-                    <div class="h6 mb-0">
-                      <span class="text-body-secondary text-decoration-line-through fs-xs me-1">34,50€</span>
-                      27,60€
-                    </div>
-                    
-                    <!-- Contrôle quantité mini -->
-                    <div class="mt-3">
-                      <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center bg-light rounded-2 border">
-                          <button type="button" class="btn btn-outline-secondary border-0 btn-xs rounded-start-2 px-2 py-1" aria-label="Diminuer quantité">
-                            <i class="fi-minus fs-xs"></i>
-                          </button>
-                          <span class="px-2 py-1 fw-semibold">3</span>
-                          <button type="button" class="btn btn-outline-secondary border-0 btn-xs rounded-end-2 px-2 py-1" aria-label="Augmenter quantité">
-                            <i class="fi-plus fs-xs"></i>
-                          </button>
-                        </div>
-                        <div class="text-primary fw-semibold">82,80€</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-4">
-                    <div class="border-top pt-3">
-                      <div class="row row-cols-2 g-2 fs-sm">
-                        <div class="col d-flex align-items-center gap-2">
-                          <i class="fi-droplet"></i>
-                          Acrylique
-                        </div>
-                        <div class="col d-flex align-items-center gap-2">
-                          <i class="fi-star"></i>
-                          4.3/5
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>
-
-              <!-- Produit 3 dans le panier -->
-              <div class="col">
-                <article class="card h-100 hover-effect-scale bg-body-tertiary border-0">
-                  <div class="card-img-top position-relative overflow-hidden">
-                    <div class="d-flex flex-column gap-2 align-items-start position-absolute top-0 start-0 z-1 pt-1 pt-sm-0 ps-1 ps-sm-0 mt-2 mt-sm-3 ms-2 ms-sm-3">
-                      <span class="badge text-bg-info d-inline-flex align-items-center">
-                        En stock
-                        <i class="fi-box ms-1"></i>
-                      </span>
-                      <span class="badge text-bg-success">Top vente</span>
-                    </div>
-                    <div class="ratio hover-effect-target bg-body-secondary" style="--fn-aspect-ratio: calc(204 / 306 * 100%)">
-                      <img src="https://images.unsplash.com/photo-1562599597-b8e6dbe8e6b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Scie circulaire">
-                    </div>
-                  </div>
-                  <div class="card-body pb-3">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                      <div class="fs-xs text-body-secondary">Outillage électrique</div>
-                      <div class="d-flex gap-1 position-relative z-2">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger rounded-circle" data-bs-toggle="tooltip" data-bs-custom-class="tooltip-sm" title="Retirer du panier" aria-label="Retirer du panier">
-                          <i class="fi-trash fs-sm"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <h3 class="h6 mb-2">
-                      <a class="hover-effect-underline   me-1" href="single-product.html">Scie Circulaire 1200W</a>
-                    </h3>
-                    <div class="h6 mb-0">149,90€</div>
-                    
-                    <!-- Contrôle quantité mini -->
-                    <div class="mt-3">
-                      <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center bg-light rounded-2 border">
-                          <button type="button" class="btn btn-outline-secondary border-0 btn-xs rounded-start-2 px-2 py-1" aria-label="Diminuer quantité">
-                            <i class="fi-minus fs-xs"></i>
-                          </button>
-                          <span class="px-2 py-1 fw-semibold">1</span>
-                          <button type="button" class="btn btn-outline-secondary border-0 btn-xs rounded-end-2 px-2 py-1" aria-label="Augmenter quantité">
-                            <i class="fi-plus fs-xs"></i>
-                          </button>
-                        </div>
-                        <div class="text-primary fw-semibold">149,90€</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer bg-transparent border-0 pt-0 pb-4">
-                    <div class="border-top pt-3">
-                      <div class="row row-cols-2 g-2 fs-sm">
-                        <div class="col d-flex align-items-center gap-2">
-                          <i class="fi-zap"></i>
-                          1200W
-                        </div>
-                        <div class="col d-flex align-items-center gap-2">
-                          <i class="fi-star"></i>
-                          4.8/5
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </article>
               </div> 
+              <!-- ////////////////////////// -->
+            <?php
+                  }
+                  
+                echo "</div>";
+            }
+            // Aucun produit en panier 
+            else{
+        ?>
+            <div class="col-12">
+                <div class="border-0">
+                    <div class="card-body text-center py-5">
+                        <!-- Icône panier vide -->
+                        <div class="mb-4">
+                            <div class="icon-empty-cart d-inline-block">
+                                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-muted">
+                                    <circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                    <path d="M8 13l-3-6"></path>
+                                    <path d="M21 13l-3-6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <!-- Message principal -->
+                        <h3 class="h4 text-muted mb-3">Votre panier est vide</h3>
+                        
+                        <!-- Description -->
+                        <p class="text-muted mb-4">
+                            Il semble que vous n'avez pas encore ajouté de produits à votre panier.<br>
+                            Parcourez notre catalogue et découvrez nos produits.
+                        </p>
+                        
+                        <!-- Boutons d'action -->
+                        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                            <a href="nos-produits.php" class="btn btn-primary px-4 py-2">
+                                <i class="fi-shopping-bag me-2"></i>
+                                Voir le catalogue
+                            </a>
+                            
+                            <a href="index.php" class="btn btn-outline-primary px-4 py-2">
+                                <i class="fi-home me-2"></i>
+                                Retour à l'accueil
+                            </a>
+                        </div>
+                        
+                        <!-- Suggestions -->
+                        <div class="mt-5 pt-4 border-top">
+                            <h5 class="h6 mb-3">Vous pourriez aimer :</h5>
+                            <div class="row justify-content-center g-3">
+                                <!-- Produit suggestion 1 -->
+                                <div class="col-6 col-md-3">
+                                    <a href="#" class="text-decoration-none">
+                                        <div class="card border h-100 hover-shadow">
+                                            <div class="card-body text-center p-3">
+                                                <div class="mb-2">
+                                                    <i class="fi-tool text-primary fs-3"></i>
+                                                </div>
+                                                <h6 class="mb-1">Outils</h6>
+                                                <small class="text-muted">Découvrir</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <!-- Produit suggestion 2 -->
+                                <div class="col-6 col-md-3">
+                                    <a href="#" class="text-decoration-none">
+                                        <div class="card border h-100 hover-shadow">
+                                            <div class="card-body text-center p-3">
+                                                <div class="mb-2">
+                                                    <i class="fi-cpu text-primary fs-3"></i>
+                                                </div>
+                                                <h6 class="mb-1">Électronique</h6>
+                                                <small class="text-muted">Explorer</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <!-- Produit suggestion 3 -->
+                                <div class="col-6 col-md-3">
+                                    <a href="#" class="text-decoration-none">
+                                        <div class="card border h-100 hover-shadow">
+                                            <div class="card-body text-center p-3">
+                                                <div class="mb-2">
+                                                    <i class="fi-settings text-primary fs-3"></i>
+                                                </div>
+                                                <h6 class="mb-1">Pièces détachées</h6>
+                                                <small class="text-muted">Voir</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Style supplémentaire -->
+            <style>
+            .icon-empty-cart {
+                animation: float 3s ease-in-out infinite;
+            }
+
+            @keyframes float {
+                0%, 100% {
+                    transform: translateY(0);
+                }
+                50% {
+                    transform: translateY(-10px);
+                }
+            }
+
+            .hover-shadow {
+                transition: all 0.3s ease;
+            }
+
+            .hover-shadow:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            </style>
+        <?php
+
+
+            } 
+        ?>
             <!-- ////////////////////// -->
 
             <!-- Pagination -->
             <nav class="pt-3 mt-3" aria-label="Listings pagination">
-              <ul class="pagination">
+              <!-- <ul class="pagination">
                 <li class="page-item active" aria-current="page">
                   <span class="page-link">
                     1
                     <span class="visually-hidden">(current)</span>
                   </span>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#!">2</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#!">3</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#!">4</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#!">5</a>
-                </li>
+                </li> 
                 <li class="page-item">
                   <span class="page-link px-2 pe-none">...</span>
                 </li>
                 <li class="page-item">
                   <a class="page-link" href="#!">18</a>
                 </li>
-              </ul>
+              </ul> -->
             </nav>
           </div>
+        <?php
+            if($ResponsePanier["success"]) {
+        ?>
           <!-- ///////////////////////// -->
+          <!-- Résumé du panier horizontal -->
+          <aside class="col-lg-9 mx-auto">
+              <div class="card border-top shadow-sm">
+                  <div class="card-body p-3">
+                      <!-- Message informatif discret -->
+                      <div class="mb-3 pb-2 border-bottom">
+                          <div class="d-flex align-items-center">
+                              <i class="fi-check-circle text-success me-2 fs-6"></i>
+                              <div class="flex-grow-1">
+                                  <small class="text-muted">
+                                      <span class="fw-medium text-dark"><?=$produitEnPanier["articles"]?> articles ajoutés</span> • Sélectionnez votre mode de livraison pour finaliser votre commande
+                                  </small>
+                              </div> 
+                          </div>
+                      </div>
+                      
+                      <div class="row g-3 align-items-center">
+                          <!-- Section livraison -->
+                          <div class="col-md-4">
+                              <div class="d-flex align-items-center mb-1">
+                                  <i class="fi-truck text-muted me-2"></i>
+                                  <span class="fw-medium">Livraison</span>
+                              </div>
+                              
+                              <!-- Sélecteur de livraison -->
+                              <div class="mb-2">
+                                  <select class="form-select form-select-sm" id="shippingMethodHorizontal">
+                                      <option value="pickup" selected>Retrait en magasin</option>
+                                      <option value="standard">Livraison standard</option>
+                                      <option value="express">Livraison express</option>
+                                  </select>
+                              </div>
+                              
+                              <!-- Détails livraison -->
+                              <div id="shippingDetailsHorizontal">
+                                  <div class="d-flex align-items-center text-muted" id="pickupDetailsHorizontal">
+                                      <small>
+                                          <span class="text-success fw-medium">Gratuit</span> • Retrait disponible sous 2h
+                                      </small>
+                                  </div>
+                                  <div class="d-flex align-items-center text-muted d-none" id="standardDetailsHorizontal">
+                                      <small>
+                                          <span class="fw-medium">3500</span> • Délai 2-3 jours ouvrés
+                                      </small>
+                                  </div>
+                                  <div class="d-flex align-items-center text-muted d-none" id="expressDetailsHorizontal">
+                                      <small>
+                                          <span class="fw-medium text-warning">6000</span> • Livraison en 24h
+                                      </small>
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          <!-- Séparateur vertical -->
+                          <div class="col-auto d-none d-md-block">
+                              <div class="vr h-50"></div>
+                          </div>
+                          
+                          <!-- Section récapitulatif  -->
+                          <div class="col-md-3">
+                              <div class="row g-2">
+                                  <div class="col-6">
+                                      <div class="d-flex flex-column">
+                                          <small class="text-muted mb-1">Sous-total</small>
+                                          <span class="fw-bold"><?=$produitEnPanier["total"]?>Fb</span>
+                                      </div>
+                                  </div>
+                                  
+                                  <div class="col-6">
+                                      <div class="d-flex flex-column">
+                                          <small class="text-muted mb-1">Livraison</small>
+                                          <span class="fw-bold text-success" id="shippingCostDisplay">Gratuit</span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          <!-- Section total -->
+                          <div class="col-md-3">
+                              <div class="border-start ps-3">
+                                  <small class="text-muted d-block mb-1">Total TTC</small>
+                                  <div class="d-flex align-items-center">
+                                      <span class="h4 fw-bold text-primary mb-0" id="totalPriceDisplay"><?=$produitEnPanier["total"]?>Fb</span>
+                                      <small class="text-muted ms-2">TVA incluse</small>
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          <!-- Section action -->
+                          <div class="col-md-2">
+                              <div class="d-grid">
+                                  <button type="button" id="btn-commande" 
+                                  class="btn btn-primary btn-sm py-2"
+                                  onclick="passerCommande(1)"
+                                  >
+                                    <div class="dot-spinner d-none" id="loading-spinner-commande">
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                        <div class="dot-spinner__dot"></div>
+                                    </div>
+                                    <i class="fi-arrow-right me-1"></i>
+                                      Commander 
+                                  </button> 
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </aside>
+
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const shippingSelect = document.getElementById('shippingMethodHorizontal');
+              const pickupDetails = document.getElementById('pickupDetailsHorizontal');
+              const standardDetails = document.getElementById('standardDetailsHorizontal');
+              const expressDetails = document.getElementById('expressDetailsHorizontal');
+              const shippingCostDisplay = document.getElementById('shippingCostDisplay');
+              const totalPriceDisplay = document.getElementById('totalPriceDisplay');
+              
+              function updateShippingDetails() {
+                  // Cacher tous les détails
+                  pickupDetails.classList.add('d-none');
+                  standardDetails.classList.add('d-none');
+                  expressDetails.classList.add('d-none');
+                  
+                  // Afficher les détails correspondants
+                  const selectedValue = shippingSelect.value;
+                  if (selectedValue === 'pickup') {
+                      pickupDetails.classList.remove('d-none');
+                  } else if (selectedValue === 'standard') {
+                      standardDetails.classList.remove('d-none');
+                  } else if (selectedValue === 'express') {
+                      expressDetails.classList.remove('d-none');
+                  }
+                  
+                  // Mettre à jour les prix
+                  updateTotal();
+              }
+              
+              function updateTotal() {
+                  const shippingCosts = {
+                      'pickup': 0,
+                      'standard': 3500,
+                      'express': 6000
+                  };
+                  
+                  const subtotal = <?=$produitEnPanier["total"]?>;
+                  const shippingCost = shippingCosts[shippingSelect.value];
+                  const total = subtotal + shippingCost;
+                  
+                  // Mettre à jour l'affichage des frais de livraison
+                  if (shippingCost === 0) {
+                      shippingCostDisplay.textContent = 'Gratuit';
+                      shippingCostDisplay.className = 'fw-bold text-success';
+                  } else {
+                      shippingCostDisplay.textContent = shippingCost.toFixed(2) + 'Fb';
+                      shippingCostDisplay.className = 'fw-bold';
+                  }
+                  
+                  // Mettre à jour le total
+                  totalPriceDisplay.textContent = total.toFixed(2) + 'Fb';
+              }
+              
+              // Écouter les changements
+              shippingSelect.addEventListener('change', updateShippingDetails);
+              
+              // Initialiser
+              updateShippingDetails();
+          });
+          </script>
+          <!-- ///////////////////////////////// -->
+        <?php } ?>
+
         </div>
       </div>
     </main>
@@ -468,6 +537,206 @@
     <!-- FOOTER ...........................-->
     <?php include("./includes/footer.php") ?>
     <!-- FOOTER ...........................-->
+    
+    <script>
+
+    //..produit_id client_id quantite  | commande
+    let url_pagner_update = "../app/index.php?action=panier/update";
+    let url_delete_to_panier = "../app/index.php?action=panier/delete&id=";
+    let url_commande_depuis_panier = "../app/index.php?action=commande/create";
    
+    function updatePannier(pannier_id, produit_id, quantite) {   
+        let loading_spinner = document.getElementById(`loading-spinner-panier-${quantite}`);  
+        let submit_btn = document.getElementById(`btn-pannier-${quantite}`);  
+          
+        // Préparation des données à envoyer
+        let formData = new FormData();  
+        formData.append("id", pannier_id);
+        formData.append("client_id", <?=$_CLIENT_ID?>);
+        formData.append("quantite", quantite);  
+        formData.append("produit_id", produit_id);  
+ 
+        // Options pour la requête fetch
+        const options = {  
+            method: 'POST',  
+            body: formData   
+        };
+        
+        loading_spinner.classList.remove("d-none");
+        submit_btn.disabled = true;
+
+        // Envoi de la requête AJAX
+        fetch(url_pagner_update, options)
+        .then(response => {
+        // Vérifier le statut HTTP
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return response.json();
+        })
+        .then(data => {
+          // Traitement de la réponse
+          console.log("Réponse du serveur:", data);
+          
+          if (data.success) {
+          
+             sweetAlertSuccessMessage(data.message || "Panier mis a jour avec success", title = "Mis en panier reussi") 
+              // Connexion réussie  
+              loading_spinner.classList.add("d-none"); 
+
+              setTimeout(()=>{
+                window.location.href = window.location.href;
+              },3000);
+
+              submit_btn.disabled = false; 
+          } 
+          else { 
+              // Réactiver le bouton
+              sweetAlertDangerMessage(data.message || "Une erreur est survenu lors de la mis en panier du produit",title = "Erreur...")
+              submit_btn.disabled = false; 
+              loading_spinner.classList.add("d-none");
+          }
+        })
+        .catch(error => {
+            // Erreur réseau ou autre
+            console.error("Erreur:", error); 
+            sweetAlertDangerMessage("Erreur de connexion au serveur. Veuillez réessayer",title = "Echec...")
+            // Réactiver le bouton
+            submit_btn.disabled = false; 
+            loading_spinner.classList.add("d-none");
+        });  
+      } 
+   
+    function retirerDuPanier(pannier_id) {   
+      let loading_spinner = document.getElementById(`loading-spinner-delete-panier-${pannier_id}`);  
+      let submit_btn = document.getElementById(`btn-delete-pannier-${pannier_id}`);  
+        
+      // Préparation des données à envoyer 
+      let formData = new FormData();  
+      formData.append("id", pannier_id); 
+
+      // Options pour la requête fetch
+      const options = {  
+          method: 'POST',  
+          body: formData   
+      };
+      
+      loading_spinner.classList.remove("d-none");
+      submit_btn.disabled = true;
+
+      // Envoi de la requête AJAX
+      fetch(url_delete_to_panier, options)
+      .then(response => {
+      // Vérifier le statut HTTP
+      if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      return response.json();
+      })
+      .then(data => {
+        // Traitement de la réponse
+        console.log("Réponse du serveur:", data);
+        
+        if (data.success) {
+        
+            sweetAlertSuccessMessage(data.message || "Peduit retire du panier avec success", title = "Produit retire") 
+            // Connexion réussie  
+            loading_spinner.classList.add("d-none"); 
+
+            setTimeout(()=>{
+              window.location.href = window.location.href;
+            },3000);
+
+            submit_btn.disabled = false; 
+        } 
+        else { 
+            // Réactiver le bouton
+            sweetAlertDangerMessage(data.message || "Une erreur est survenu",title = "Erreur...")
+            submit_btn.disabled = false; 
+            loading_spinner.classList.add("d-none");
+        }
+      })
+      .catch(error => {
+          // Erreur réseau ou autre
+          console.error("Erreur:", error); 
+          sweetAlertDangerMessage("Erreur de connexion au serveur. Veuillez réessayer",title = "Echec...")
+          // Réactiver le bouton
+          submit_btn.disabled = false; 
+          loading_spinner.classList.add("d-none");
+      });  
+    } 
+
+    function passerCommande(is_for_panier = 0) {
+        let loading_spinner = document.getElementById(`loading-spinner-commande`);  
+        let submit_btn = document.getElementById(`btn-commande`);  
+
+        const shippingSelect = document.getElementById('shippingMethodHorizontal');
+        const selectedValue = shippingSelect.value;
+
+        let type_commande = 0;
+        switch(selectedValue) {
+            case "pickup" : type_commande = 1; break;
+            case "standard" : type_commande = 2; break;
+            case "express" : type_commande = 3; break;
+        }
+  
+        // Préparation des données à envoyer
+        let formData = new FormData();   
+        formData.append("client_id", <?=$_CLIENT_ID?>);
+        formData.append("is_for_panier", is_for_panier);  
+        formData.append("type_commande", type_commande);  
+ 
+        // Options pour la requête fetch
+        const options = {  
+            method: 'POST',  
+            body: formData   
+        };
+        
+        loading_spinner.classList.remove("d-none");
+        submit_btn.disabled = true;
+
+        // Envoi de la requête AJAX
+        fetch(url_commande_depuis_panier, options)
+        .then(response => {
+        // Vérifier le statut HTTP
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return response.json();
+        })
+        .then(data => {
+          // Traitement de la réponse
+          console.log("Réponse du serveur:", data);
+          
+          if (data.success) {
+          
+             sweetAlertSuccessMessage(data.message || "Commande realise avec success", title = "Commande reussi") 
+              // Connexion réussie  
+              loading_spinner.classList.add("d-none"); 
+
+              setTimeout(()=>{
+                window.location.href = window.location.href;
+              },3000);
+
+              submit_btn.disabled = false; 
+          }
+          else { 
+              // Réactiver le bouton
+              sweetAlertDangerMessage(data.message || "Une erreur est survenu lors de la commande",title = "Commande echoue")
+              submit_btn.disabled = false; 
+              loading_spinner.classList.add("d-none");
+            }
+        })
+        .catch(error => {
+            // Erreur réseau ou autre
+            console.error("Erreur:", error); 
+            sweetAlertDangerMessage("Erreur de connexion au serveur. Veuillez réessayer",title = "Echec...")
+            // Réactiver le bouton
+            submit_btn.disabled = false; 
+            loading_spinner.classList.add("d-none");
+        });  
+    }
+
+    </script>
 
 </body></html>

@@ -1,0 +1,80 @@
+<?php
+
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    include_once("model.php");
+  
+    // produit_id client_id quantite
+    function commandeController($action, $data) {
+        try{ 
+            if(empty($action)) {
+                throw new ErrorException("Aucune methode fourni",404);
+            }
+// client_id
+// is_for_panier
+// type_commande
+// quantite
+// produit_id
+            switch($action) {  
+                case "create": 
+                    if(isset($data["is_for_panier"]) && isset($data["client_id"]) && isset($data["type_commande"])
+                        && !empty($data["client_id"]) && !empty($data["type_commande"])) {
+                            if($data["is_for_panier"] == 1) {
+                                return addCommandeDepuisPanier($data["type_commande"], $data["client_id"]); 
+                            }
+                            else{
+                                $client_id = $data["client_id"];
+                                $type_commande = $data["type_commande"];
+
+                                $id_produit = $data["produit_id"];
+                                $quantite = $data["quantite"];
+
+                                $lis_prpduit[] = array("produit_id"=>$id_produit, "quantite"=>$quantite);
+
+                                $commande = array("client_id"=>$client_id, "type_commande"=>$type_commande, "produits"=>$lis_prpduit);
+                                return addCommande($commande);
+                            }
+                        
+                        return getResponse("Une erruer est survenu", 500, $success = false); 
+                    } 
+                    else 
+                        throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire[".implode(array_keys($data)),404);
+                    break; 
+                    
+
+                case "ajout_au_panier":
+                    if(isset($data["produit_id"]) && isset($data["client_id"]) && isset($data["quantite"])
+                        && !empty($data["produit_id"]) && !empty($data["client_id"]) && !empty($data["quantite"])) {
+                        $response = addToPanier($data); 
+                        return $response; 
+                    }
+                    else 
+                        throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire",404); 
+                    
+
+                case "delete":
+                    if(isset($data["id"])) {
+                        $id = intval($data["id"]); 
+                        $response = deleteToPanier($id); 
+                        return $response; 
+                    }
+                    else 
+                        throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire",404); 
+                    
+                
+                default :;
+            } 
+        }
+        catch(Exception $e) {
+            return getResponse($e->getMessage(), $e->getCode(), false);
+        }
+    }
+ 
+    
+    // function getAllCommandes($client_id=null) {
+    //     if($client_id) return getCommandeByClientSimple($client_id); 
+    // }
+
+?>

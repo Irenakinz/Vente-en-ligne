@@ -3,7 +3,8 @@
 
     session_start() ; 
     include_once("../app/controllerCategorie.php");
-    include_once("../app/conrollerProduit.php");
+    include_once("../app/conrollerProduit.php"); 
+    include_once("../app/conrollerPanier.php");
 
     $_IS_CONNECTED = (isset($_SESSION['client']) && !empty($_SESSION['client'])) ? 1 : 0;
 

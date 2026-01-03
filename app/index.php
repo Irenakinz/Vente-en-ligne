@@ -8,9 +8,10 @@
     include_once("conrollerClient.php");
     include_once("conrollerProduit.php");
     include_once("conrollerPanier.php");
+    include_once("conrollerCommande.php");
 
     set_exception_handler(function($e){
-        echo json_encode(getResponse($e->getMessage(), $e->getCode(), false));
+        echo json_encode(getResponse($e->getMessage()."[fichier=>".$e->getFile()."]"."[ligne=>".$e->getLine()."]", $e->getCode(), false));
     });
 
     set_error_handler(function( int $errno,String $errstr, String $errfile,int $errline){
@@ -48,6 +49,10 @@
 
         case "panier" : 
             $return = panierController($action, $data);
+            echo json_encode($return); break;
+
+        case "commande" : 
+            $return = commandeController($action, $data);
             echo json_encode($return); break;
     }
 
