@@ -41,29 +41,7 @@
                     } 
                     else 
                         throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire[".implode(array_keys($data)),404);
-                    break; 
-                    
-
-                case "ajout_au_panier":
-                    if(isset($data["produit_id"]) && isset($data["client_id"]) && isset($data["quantite"])
-                        && !empty($data["produit_id"]) && !empty($data["client_id"]) && !empty($data["quantite"])) {
-                        $response = addToPanier($data); 
-                        return $response; 
-                    }
-                    else 
-                        throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire",404); 
-                    
-
-                case "delete":
-                    if(isset($data["id"])) {
-                        $id = intval($data["id"]); 
-                        $response = deleteToPanier($id); 
-                        return $response; 
-                    }
-                    else 
-                        throw new ErrorException("Veuillez renseigner tous les champs avant de soumettre le formulaire",404); 
-                    
-                
+               
                 default :;
             } 
         }
@@ -73,8 +51,12 @@
     }
  
     
-    // function getAllCommandes($client_id=null) {
-    //     if($client_id) return getCommandeByClientSimple($client_id); 
-    // }
+    function getAllCommandesCtrl($client_id=null) {
+        if($client_id) return getCommandeByClientSimple($client_id); 
+    }
+
+    function getStatistiqueClent($client_id) {
+        return getClientStats($client_id);
+    }
 
 ?>

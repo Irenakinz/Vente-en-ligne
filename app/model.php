@@ -968,15 +968,16 @@
         
     }  
      
+    // ................................................................
     // Version alternative sans JSON (pour MySQL < 5.7)
     function getCommandeByClientSimple($client_id)
     {
         $sql = "SELECT 
                 cmd.*,
                 cl.nom as client_nom,
-                cl.prenom as client_prenom,
+                cl.prenom as client_prenom
                 FROM commandes cmd
-                INNER JOIN client cl ON cmd.client_id = cl.id
+                INNER JOIN clients cl ON cmd.client_id = cl.id
                 WHERE cmd.client_id = :client_id
                 ORDER BY cmd.date_commande DESC";
 
@@ -1018,7 +1019,79 @@
         }
     }
 
+    function getClientStats($client_id) {
+        try {
+            $pdo = getConnection();
+            
+            // Requête unique pour toutes les statistiques
+            $sql = "SELECT 
+                        -- Nombre total de produits commandés
+                        (
+                            SELECT SUM(pc.quantite)
+                            FROM produit_commande pc
+                            INNER JOIN commandes cmd ON pc.id_commande = cmd.id
+                            WHERE cmd.client_id = :client_id
+                        ) as total_produits_commandes,
+                        
+                        -- Nombre de commandes en cours (etat = 0)
+                        (
+                            SELECT COUNT(*)
+                            FROM commandes
+                            WHERE client_id = :client_id AND etat = 0
+                        ) as commandes_en_cours,
+                        
+                        -- Nombre de commandes livrées (etat = 2 selon votre structure précédente)
+                        (
+                            SELECT COUNT(*)
+                            FROM commandes
+                            WHERE client_id = :client_id AND etat = 2
+                        ) as commandes_livrees,
+                        
+                        -- Coût total dépensé (commandes avec état validé = 1)
+                        (
+                            SELECT COALESCE(SUM(couptotatal), 0)
+                            FROM commandes
+                            WHERE client_id = :client_id AND etat = 1
+                        ) as total_depense_valide,
+                        
+                        -- Coût total toutes commandes confondues
+                        (
+                            SELECT COALESCE(SUM(couptotatal), 0)
+                            FROM commandes
+                            WHERE client_id = :client_id
+                        ) as total_depense_tout,
+                        
+                        -- Nombre total de commandes
+                        (
+                            SELECT COUNT(*)
+                            FROM commandes
+                            WHERE client_id = :client_id
+                        ) as total_commandes
+                    FROM DUAL";
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':client_id' => $client_id]);
+            
+            $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Formatage des résultats
+            $result = [
+                'total_produits_commandes' => (int)($stats['total_produits_commandes'] ?? 0),
+                'commandes_en_cours' => (int)($stats['commandes_en_cours'] ?? 0),
+                'commandes_livrees' => (int)($stats['commandes_livrees'] ?? 0),
+                'total_depense_valide' => (int)($stats['total_depense_valide'] ?? 0),
+                'total_depense_tout' => (int)($stats['total_depense_tout'] ?? 0),
+                'total_commandes' => (int)($stats['total_commandes'] ?? 0)
+            ];
+            
+            return getResponse("Statistiques récupérées", 200, true, $result);
+            
+        } catch (Exception $e) {
+            return getResponse("Erreur lors de la récupération des statistiques: " . $e->getMessage(), 500, false);
+        }
+    }
     // Toutes les commandes// Toutes les commandes avec leurs produits
+    // ................................................................
     function getAllCommandes()
     {
         $sql = "SELECT 
@@ -1322,7 +1395,8 @@
             throw $e;
         }
     }
-
-   
+ 
+//    $data = getClientStats(1);
+//    print_r($data);
 ?> 
 

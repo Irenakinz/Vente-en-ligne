@@ -59,7 +59,7 @@
         <div class="row">
           <div class="col-md-6">
             <div class="position-relative w-100 h-100 bg-body-tertiary rounded overflow-hidden" style="max-width: 564px">
-              <img src="assets/img/about/quincaillerie-interieur.jpg" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" alt="Quincaillerie Salama - Notre magasin">
+              <img src="assets/quincaillerie.jpeg" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" alt="Quincaillerie Salama - Notre magasin">
             </div>
           </div>
 
@@ -283,6 +283,10 @@
     <!-- FOOTER ...........................-->
     <?php include("./includes/footer.php") ?>
     <!-- FOOTER ...........................-->
-   
+
 
 </body></html>
+
+<!-- quincaillerie4.jpg
+quincaillerie3
+quincaillerie2.jpeg -->
